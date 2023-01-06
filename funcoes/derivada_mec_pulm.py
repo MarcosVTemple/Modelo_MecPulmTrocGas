@@ -52,5 +52,5 @@ def derivada_mp(
     )
 
     # dx = np.dot(a, x) + np.dot(b, u) #8min19s
-    dx = np.matrix(np.array([dPl, dPtr, dPb, dPA, dPpl])).transpose() #8min19s
+    dx = np.matrix(np.array([dPl, dPtr, dPb, dPA, dPpl])).transpose() #8min18s
     return dx
