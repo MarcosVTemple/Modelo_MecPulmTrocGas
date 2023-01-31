@@ -14,29 +14,10 @@ from funcoes.plot_troc_gas import plot_tg
 
 from decorators.timefunc import timefunc
 
-
-n_A_O2 = np.zeros(cts_tg["N"], dtype=int)
-n_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
-n_A_N2 = np.zeros(cts_tg["N"], dtype=int)
-n_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
-n_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
-n_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
-n_t_O2 = np.zeros(cts_tg["N"], dtype=int)
-n_t_CO2 = np.zeros(cts_tg["N"], dtype=int)
-n_t_N2 = np.zeros(cts_tg["N"], dtype=int)
-P_A_O2 = np.zeros(cts_tg["N"], dtype=int)
-P_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
-P_A_N2 = np.zeros(cts_tg["N"], dtype=int)
-P_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
-P_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
-P_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
-
-VA_dot = np.zeros(cts_tg["N"], dtype=int)
-
 RR = cts_tg["RR"]
 dt = cts_tg["dt"]
 Pfis = cts_tg["Pfis"]
-f = RR/60
+f = RR / 60
 
 
 class TrocaGases:
@@ -44,8 +25,26 @@ class TrocaGases:
         tempo_simulacao = os.getenv("tempo_simulacao", default=None)
         if tempo_simulacao:
             cts_tg["N"] = int(int(tempo_simulacao)/cts_tg["dt"])
-        self.t = np.arange(0, cts_tg["N"] * cts_tg["dt"], cts_tg["dt"])
+
+        n_A_O2 = np.zeros(cts_tg["N"], dtype=int)
+        n_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
+        n_A_N2 = np.zeros(cts_tg["N"], dtype=int)
+        n_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
+        n_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
+        n_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
+        n_t_O2 = np.zeros(cts_tg["N"], dtype=int)
+        n_t_CO2 = np.zeros(cts_tg["N"], dtype=int)
+        n_t_N2 = np.zeros(cts_tg["N"], dtype=int)
+        P_A_O2 = np.zeros(cts_tg["N"], dtype=int)
+        P_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
+        P_A_N2 = np.zeros(cts_tg["N"], dtype=int)
+        P_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
+        P_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
+        P_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
+        VA_dot = np.zeros(cts_tg["N"], dtype=int)
+
         self.entrada_tg_from_mp = None
+        self.t = np.arange(0, cts_tg["N"] * cts_tg["dt"], cts_tg["dt"])
         self.x_tg = pd.DataFrame(
             {
                 'n_A_O2': n_A_O2, 'n_A_CO2': n_A_CO2, 'n_A_N2': n_A_N2,
@@ -67,23 +66,6 @@ class TrocaGases:
                 'VA_dot': VA_dot,
             }
         )
-
-    @timefunc
-    def run_troca_gases(self):
-        self.inicializa_var_estado()
-        self.rungekutta2()
-        if os.getenv("save_data", default="") == 'TRUE':
-            timestamp = str(int(round(t.time() * 1000)))
-            self.x_tg.to_csv(
-                f"results/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
-                sep=";",
-                index=False
-            )
-            self.y_tg.to_csv(
-                f"results/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
-                sep=";",
-                index=False
-            )
 
     def inicializa_var_estado(self):
         nt_inicial = ((cts_tg["Patm"]*cts_tg["VA_t"])/(cts_tg["R"]*cts_tg["Temp"]))*1000
@@ -140,3 +122,20 @@ class TrocaGases:
 
             # atribuindo os valores em y
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
+
+    @timefunc
+    def run_troca_gases(self):
+        self.inicializa_var_estado()
+        self.rungekutta2()
+        if os.getenv("save_data", default="") == 'TRUE':
+            timestamp = str(int(round(t.time() * 1000)))
+            self.x_tg.to_csv(
+                f"results/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                sep=";",
+                index=False
+            )
+            self.y_tg.to_csv(
+                f"results/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                sep=";",
+                index=False
+            )

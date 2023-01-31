@@ -9,15 +9,17 @@ def derivada_tg(x, u, cts_tg):
 
 
     nT = n_A_O2 + n_A_CO2 + n_A_N  # numero de mmols no ALVEOLO
+
     nT_cap = ((-n_cap_O2 - n_cap_CO2) * (nT / n_A_N)) / (1 - (nT / n_A_N))
+    nT_t = ((-n_t_O2 - n_t_CO2) * (nT / n_A_N)) / (1 - (nT / n_A_N))
 
     if cts_tg["modo_ventilacao"] == "apneia":
         u = 0
 
     # derivada alveolar
     if u >= 0:
-        dn_A_O2 = (D_O2 * Patm) * (-(n_A_O2 / nT) + (n_cap_O2 / nT_cap)) + ((Patm * f_O2) / (R * T)) * u
-        dn_A_CO2 = (D_CO2 * Patm) * (-(n_A_CO2 / nT) + (n_cap_CO2 / nT_cap)) + ((Patm * f_CO2) / (R * T)) * u
+        dn_A_O2 = (D_O2 * Patm) * (-(n_A_O2 / nT) + (n_t_O2 / nT_t)) + ((Patm * f_O2) / (R * T)) * u
+        dn_A_CO2 = (D_CO2 * Patm) * (-(n_A_CO2 / nT) + (n_t_CO2 / nT_t)) + ((Patm * f_CO2) / (R * T)) * u
         dn_A_N = 0 + ((Patm * f_N) / (R * T)) * u
         PA = Patm * (f_CO2 + f_O2 + f_N)
     else:
@@ -25,14 +27,14 @@ def derivada_tg(x, u, cts_tg):
         PA_CO2 = n_A_CO2 * (Patm) / nT
         PA_N = n_A_N * (Patm) / nT
         PA = PA_O2 + PA_CO2 + PA_N
-        dn_A_O2 = (D_O2 * Patm) * (-(n_A_O2 / nT) + (n_cap_O2 / nT_cap)) + ((PA_O2) / (R * T)) * u
-        dn_A_CO2 = (D_CO2 * Patm) * (-(n_A_CO2 / nT) + (n_cap_CO2 / nT_cap)) + ((PA_CO2) / (R * T)) * u
+        dn_A_O2 = (D_O2 * Patm) * (-(n_A_O2 / nT) + (n_t_O2 / nT_t)) + ((PA_O2) / (R * T)) * u
+        dn_A_CO2 = (D_CO2 * Patm) * (-(n_A_CO2 / nT) + (n_t_CO2 / nT_t)) + ((PA_CO2) / (R * T)) * u
         dn_A_N = ((Patm * f_N) / (R * T)) * u
 
     # derivada capilar
-    dn_cap_O2 = (D_O2 * Patm) * ((n_A_O2 / nT) - (n_cap_O2 / nT_cap)) + (Q_b * sigma) * (
+    dn_cap_O2 = (D_O2 * Patm) * ((n_A_O2 / nT) - (n_t_O2 / nT_t)) + (Q_b * sigma) * (
                 (n_t_O2 / Vt) - (n_cap_O2 / Vcap))
-    dn_cap_CO2 = (D_CO2 * Patm) * ((n_A_CO2 / nT) - (n_cap_CO2 / nT_cap)) + (Q_b * sigma) * (
+    dn_cap_CO2 = (D_CO2 * Patm) * ((n_A_CO2 / nT) - (n_t_CO2 / nT_t)) + (Q_b * sigma) * (
                  (n_t_CO2 / Vt) - (n_cap_CO2 / Vcap))
 
     # derivada tecidual
