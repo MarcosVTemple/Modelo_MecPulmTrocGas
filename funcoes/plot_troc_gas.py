@@ -17,7 +17,7 @@ def plot_tg(t, x, y, u):
             f"results/tg/figures/1_mols_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
-        )
+        ) 
     # plt.show()
 
     plt.figure(2)

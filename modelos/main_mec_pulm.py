@@ -13,29 +13,6 @@ from funcoes.plot_mec_pulm import plot_mp
 
 from decorators.timefunc import timefunc
 
-Pl = np.zeros(cts_mp["N"], dtype=int)
-Ptr = np.zeros(cts_mp["N"], dtype=int)
-Pb = np.zeros(cts_mp["N"], dtype=int)
-PA = np.zeros(cts_mp["N"], dtype=int)
-Ppl = np.zeros(cts_mp["N"], dtype=int)
-
-Pao_Pvent_zero = np.zeros(cts_mp["N"], dtype=int)
-dPmus_zero = np.zeros(cts_mp["N"], dtype=int)
-
-vetor_zero = np.zeros(cts_mp["N"], dtype=int)
-
-Ti = cts_mp["Ti"]
-Te = cts_mp["Te"]
-T = cts_mp["T"]
-# Te = cts_mp["IEratio"]*Ti
-tau = cts_mp["Te"]/5
-RR = cts_mp["RR"]
-IEratio = cts_mp["IEratio"]
-
-Pmus_min = cts_mp["Pmus_min"]
-Pao = cts_mp["Pao"]
-# Pvent = cts_mp["Pvent"]
-Pvent = None
 
 Cl = cts_mp["Cl"]
 Ctr = cts_mp["Ctr"]
@@ -52,13 +29,44 @@ Vul = cts_mp["Vul"]
 Vut = cts_mp["Vut"]
 Vub = cts_mp["Vub"]
 VuA = cts_mp["VuA"]
-
+Ti = cts_mp["Ti"]
+Te = cts_mp["Te"]
+T = cts_mp["T"]
+# Te = cts_mp["IEratio"]*Ti
+tau = cts_mp["Te"]/5
+RR = cts_mp["RR"]
+IEratio = cts_mp["IEratio"]
 f = RR/60
 dt = cts_mp["dt"]
+Pmus_min = cts_mp["Pmus_min"]
+Pao = cts_mp["Pao"]
+# Pvent = cts_mp["Pvent"]
+Pvent = None
 
+Pao_Pvent_zero = None
+dPmus_zero = None
+Pao_Pvent_zero = None
+dPmus_zero = None
 
 class MecanicaPulmonar:
     def __init__(self):
+        tempo_simulacao = os.getenv("tempo_simulacao", default=None)
+        if tempo_simulacao:
+            cts_mp["N"] = int(int(tempo_simulacao)/cts_mp["dt"])
+        
+        Pl = np.zeros(cts_mp["N"], dtype=int)
+        Ptr = np.zeros(cts_mp["N"], dtype=int)
+        Pb = np.zeros(cts_mp["N"], dtype=int)
+        PA = np.zeros(cts_mp["N"], dtype=int)
+        Ppl = np.zeros(cts_mp["N"], dtype=int)
+        vetor_zero = np.zeros(cts_mp["N"], dtype=int)
+        
+        Pao_Pvent_zero = np.zeros(cts_mp["N"], dtype=int)
+        dPmus_zero = np.zeros(cts_mp["N"], dtype=int)
+        Pao_Pvent_zero = np.zeros(cts_mp["N"], dtype=int)
+        dPmus_zero = np.zeros(cts_mp["N"], dtype=int)
+        
+            
         self.t = np.arange(0, cts_mp["N"]*cts_mp["dt"], cts_mp["dt"])
 
         self.x_mp = pd.DataFrame(
