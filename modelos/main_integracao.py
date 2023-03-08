@@ -5,7 +5,8 @@ import math as m
 import time as t
 import os
 
-from parametros import cts_mp, cts_tg
+from parametros import cts_mp, cts_tg, cts_int
+from funcoes.plot_integracao import plot_int
 
 from funcoes.entrada_troc_gas import entrada_tg
 from funcoes.derivada_troc_gas import derivada_tg
@@ -21,7 +22,7 @@ from funcoes.plot_mec_pulm import plot_mp
 from decorators.timefunc import timefunc
 
 RR = cts_tg["RR"]
-dt = cts_tg["dt"]
+dt = cts_int["dt"]
 Pfis = cts_tg["Pfis"]
 f = RR / 60
 
@@ -48,7 +49,7 @@ tau = cts_mp["Te"]/5
 RR = cts_mp["RR"]
 IEratio = cts_mp["IEratio"]
 f = RR/60
-dt = cts_mp["dt"]
+
 Pmus_min = cts_mp["Pmus_min"]
 Pao = cts_mp["Pao"]
 # Pvent = cts_mp["Pvent"]
@@ -59,32 +60,70 @@ dPmus_zero = None
 Pao_Pvent_zero = None
 dPmus_zero = None
 
+# int 
+dt = cts_int["dt"]
+
 
 class Integracao:
     def __init__(self):
         tempo_simulacao = os.getenv("tempo_simulacao", default=None)
         if tempo_simulacao:
-            cts_tg["N"] = int(int(tempo_simulacao)/cts_tg["dt"])
+            cts_int["N"] = int(int(tempo_simulacao)/cts_int["dt"])
 
-        n_A_O2 = np.zeros(cts_tg["N"], dtype=int)
-        n_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
-        n_A_N2 = np.zeros(cts_tg["N"], dtype=int)
-        n_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
-        n_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
-        n_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
-        n_t_O2 = np.zeros(cts_tg["N"], dtype=int)
-        n_t_CO2 = np.zeros(cts_tg["N"], dtype=int)
-        n_t_N2 = np.zeros(cts_tg["N"], dtype=int)
-        P_A_O2 = np.zeros(cts_tg["N"], dtype=int)
-        P_A_CO2 = np.zeros(cts_tg["N"], dtype=int)
-        P_A_N2 = np.zeros(cts_tg["N"], dtype=int)
-        P_cap_O2 = np.zeros(cts_tg["N"], dtype=int)
-        P_cap_CO2 = np.zeros(cts_tg["N"], dtype=int)
-        P_cap_N2 = np.zeros(cts_tg["N"], dtype=int)
-        VA_dot = np.zeros(cts_tg["N"], dtype=int)
+        # mp
+        Pl = np.zeros(cts_int["N"], dtype=int)
+        Ptr = np.zeros(cts_int["N"], dtype=int)
+        Pb = np.zeros(cts_int["N"], dtype=int)
+        PA = np.zeros(cts_int["N"], dtype=int)
+        Ppl = np.zeros(cts_int["N"], dtype=int)
+        vetor_zero = np.zeros(cts_int["N"], dtype=int)
+        
+        Pao_Pvent_zero = np.zeros(cts_int["N"], dtype=int)
+        dPmus_zero = np.zeros(cts_int["N"], dtype=int)
+        Pao_Pvent_zero = np.zeros(cts_int["N"], dtype=int)
+        dPmus_zero = np.zeros(cts_int["N"], dtype=int)
+        
+            
+        self.t = np.arange(0, cts_int["N"]*cts_mp["dt"], cts_mp["dt"])
+
+        self.x_mp = pd.DataFrame(
+            {
+                'Pl': Pl, 'Ptr': Ptr, 'Pb': Pb, 'PA': PA, 'Ppl': Ppl
+            }
+        )
+        self.y_mp = pd.DataFrame(
+            {
+                'V_dot': vetor_zero, 'VA_dot': vetor_zero, 'Vl': vetor_zero,
+                'Vtr': vetor_zero, 'Vb': vetor_zero, 'VA': vetor_zero,
+                'VD': vetor_zero, 'V': vetor_zero,
+            }
+        )
+        self.u_mp = pd.DataFrame(
+            {
+                'dPmus': vetor_zero, 'Pao_Pvent': vetor_zero, 'Pmus': vetor_zero
+            }
+        )
+
+        # tg
+        n_A_O2 = np.zeros(cts_int["N"], dtype=int)
+        n_A_CO2 = np.zeros(cts_int["N"], dtype=int)
+        n_A_N2 = np.zeros(cts_int["N"], dtype=int)
+        n_cap_O2 = np.zeros(cts_int["N"], dtype=int)
+        n_cap_CO2 = np.zeros(cts_int["N"], dtype=int)
+        n_cap_N2 = np.zeros(cts_int["N"], dtype=int)
+        n_t_O2 = np.zeros(cts_int["N"], dtype=int)
+        n_t_CO2 = np.zeros(cts_int["N"], dtype=int)
+        n_t_N2 = np.zeros(cts_int["N"], dtype=int)
+        P_A_O2 = np.zeros(cts_int["N"], dtype=int)
+        P_A_CO2 = np.zeros(cts_int["N"], dtype=int)
+        P_A_N2 = np.zeros(cts_int["N"], dtype=int)
+        P_cap_O2 = np.zeros(cts_int["N"], dtype=int)
+        P_cap_CO2 = np.zeros(cts_int["N"], dtype=int)
+        P_cap_N2 = np.zeros(cts_int["N"], dtype=int)
+        VA_dot = np.zeros(cts_int["N"], dtype=int)
 
         self.entrada_tg_from_mp = None
-        self.t = np.arange(0, cts_tg["N"] * cts_tg["dt"], cts_tg["dt"])
+        self.t = np.arange(0, cts_int["N"] * cts_int["dt"], cts_int["dt"])
         self.x_tg = pd.DataFrame(
             {
                 'n_A_O2': n_A_O2, 'n_A_CO2': n_A_CO2, 'n_A_N2': n_A_N2,
@@ -127,17 +166,16 @@ class Integracao:
         self.x_tg.iloc[0, 1] = nt_inicial*cts_tg["f_CO2"]  # 2.5817
         self.x_tg.iloc[0, 2] = nt_inicial*cts_tg["f_N2_H2O"]
 
-        self.x_tg.iloc[0, 3] = 0.5388
-        self.x_tg.iloc[0, 4] = 0.2072
+        self.x_tg.iloc[0, 3] = 0.535#0.5388
+        self.x_tg.iloc[0, 4] = 0.23#0.2072
 
-        self.x_tg.iloc[0, 5] = 181.56
-        self.x_tg.iloc[0, 6] = 85.23
+        self.x_tg.iloc[0, 5] = 150#181.56
+        self.x_tg.iloc[0, 6] = 100 #85.23
         # self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{cts_mp['N']}.csv", sep=";")['VA_dot']
-        self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{500000}.csv", sep=";")['VA_dot']
+        # self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{500000}.csv", sep=";")['VA_dot']
         
     def plot_integracao(self):
-        plot_tg(self.t, self.x_tg, self.y_tg, self.u_tg)
-        plot_mp(self.t, self.x_mp, self.y_mp, self.u_mp)
+        plot_int(self.t, self.x_tg, self.y_tg, self.u_tg, self.x_mp, self.y_mp, self.u_mp)
         
     @timefunc
     def run_integracao(self):
@@ -168,7 +206,7 @@ class Integracao:
             
     def rungekutta4(self):
          
-        for i in tqdm(range(cts_mp["N"]-1)):
+        for i in tqdm(range(cts_int["N"]-1)):
             ### mp
             
             # u em t
@@ -200,21 +238,27 @@ class Integracao:
 
             # atribuindo os valores em y
             self.y_mp.iloc[i + 1, :] = saida_mp(x_rk2, u_t, Cl, Ctr, Cb, CA, Rtb, Rlt, Rml, RbA, Vul, Vut, Vub, VuA)
+            VA_dot_mp = self.y_mp.iloc[i + 1, 1]
             
             ### tg 
             if self.entrada_tg_from_mp is not None:
                 u_tg_t_array = self.entrada_tg_from_mp.iloc[i]
                 u_tg = u_tg_t_array
                 self.u_tg.iloc[i + 1, :] = u_tg_t_array
+            # INTEGRACAO DOS SISTEMAS: SAIDA DE MP (VA_DOT) COMO ENTRADA DE TG (QA) - FLUXO ALVEOLAR
+            elif VA_dot_mp is not None:
+                u_tg = VA_dot_mp
+                # u_tg = u_tg_t_array
+                self.u_tg.iloc[i+1, :] = u_tg
             else:
                 # u em t
                 phi = 2 * m.pi * f * t
-                u_tg_t_array = entrada_tg(phi=phi, Pfis=Pfis)
+                u_tg_t_array = entrada_tg(phi=phi, Pfis=Pfis) # QA
                 u_tg = u_tg_t_array
                 self.u_tg.iloc[i+1, :] = u_tg_t_array
 
             x_tg_array = self.x_tg.iloc[i, 0:].to_numpy()
-            x_tg = x_tg_array  
+            x_tg = x_tg_array
 
             # constantes para RK2
             k1_tg_rk2 = derivada_tg(x_tg, u_tg, cts_tg)

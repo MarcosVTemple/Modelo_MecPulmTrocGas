@@ -12,4 +12,4 @@ def controle_mp(t: float, RR: float, IEratio: float) -> (float, float, float, fl
     Ti = T - Te
 
     tciclo = t % T
-    return tciclo, T, Te, Ti
+    return (tciclo, T, Te, Ti)

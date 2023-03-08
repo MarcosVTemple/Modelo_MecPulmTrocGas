@@ -1,6 +1,5 @@
 cts_mp = {
     #### MECANICA PULMONAR ####
-    "f": 0.20,  # [rad/s]
     "N": 500000,
     "dt": 0.0004,
     # COMPLIANCE l/cmH2O
@@ -102,4 +101,9 @@ cts_tg = {
     # "M_O2": 250,        # ml/min
     # "M_CO2": 210,        # ml/min
     # "QR": 0.84,        # ml/min
+}
+
+cts_int = {
+    "N": 60000,
+    "dt": 0.0004,
 }

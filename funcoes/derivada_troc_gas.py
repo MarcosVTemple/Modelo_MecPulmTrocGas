@@ -40,8 +40,11 @@ def derivada_tg(x, u, cts_tg):
     # derivada tecidual
     K_O2 = Q_O2 / c_t_O2_fis
     K_CO2 = 0.85 * K_O2
-    dn_t_O2 = Q_b * sigma * ((-n_t_O2 / Vt) + (n_cap_O2 / Vcap)) - K_O2 * (n_t_O2 / Vt)
-    dn_t_CO2 = Q_b * sigma * ((-n_t_CO2 / Vt) + (n_cap_CO2 / Vcap)) + K_CO2 * (n_t_O2 / Vt)
+    # dn_t_O2 = Q_b * sigma * ((-n_t_O2 / Vt) + (n_cap_O2 / Vcap)) - K_O2 * (n_t_O2 / Vt)
+    # dn_t_CO2 = Q_b * sigma * ((-n_t_CO2 / Vt) + (n_cap_CO2 / Vcap)) + K_CO2 * (n_t_O2 / Vt)
+    
+    dn_t_O2 = Q_b * sigma * ((-n_t_O2 / Vt) + (n_cap_O2 / Vcap)) - K_O2 * (n_cap_O2 / Vcap)
+    dn_t_CO2 = Q_b * sigma * ((-n_t_CO2 / Vt) + (n_cap_CO2 / Vcap)) + K_CO2 * (n_cap_O2 / Vcap)
 
     dx = np.array([dn_A_O2, dn_A_CO2, dn_A_N, dn_cap_O2, dn_cap_CO2, dn_t_O2, dn_t_CO2])
     return dx
