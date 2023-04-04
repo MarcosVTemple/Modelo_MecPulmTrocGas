@@ -7,10 +7,10 @@ import os
 
 from parametros import cts_mp, cts_tg
 
-from funcoes.entrada_troc_gas import entrada_tg
-from funcoes.derivada_troc_gas import derivada_tg
-from funcoes.saida_troc_gas import saida_tg
-from funcoes.plot_troc_gas import plot_tg
+from functions.entrada_troc_gas import entrada_tg
+from functions.derivada_troc_gas import derivada_tg
+from functions.saida_troc_gas import saida_tg
+from functions.plot_troc_gas import plot_tg
 
 from decorators.timefunc import timefunc
 
@@ -78,8 +78,8 @@ class TrocaGases:
 
         self.x_tg.iloc[0, 5] = 181.56
         self.x_tg.iloc[0, 6] = 85.23
-        # self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{cts_mp['N']}.csv", sep=";")['VA_dot']
-        self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{500000}.csv", sep=";")['VA_dot']
+        # self.entrada_tg_from_mp = pd.read_csv(f"temp/mp/data/saidas_dt_0.0004_{cts_mp['N']}.csv", sep=";")['VA_dot']
+        self.entrada_tg_from_mp = pd.read_csv(f"temp/mp/data/saidas_dt_0.0004_{500000}.csv", sep=";")['VA_dot']
 
     def plot_troca_gases(self):
         plot_tg(self.t, self.x_tg, self.y_tg, self.u_tg)
@@ -130,12 +130,12 @@ class TrocaGases:
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
             self.x_tg.to_csv(
-                f"results/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
             self.y_tg.to_csv(
-                f"results/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )

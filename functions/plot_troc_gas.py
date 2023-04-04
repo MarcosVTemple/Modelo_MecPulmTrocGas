@@ -14,7 +14,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/1_mols_alveolo_"
+            f"temp/tg/figures/1_mols_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         ) 
@@ -29,7 +29,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/2_mols_capilar_"
+            f"temp/tg/figures/2_mols_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -43,7 +43,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/3_mols_tecidual_"
+            f"temp/tg/figures/3_mols_tecidual_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -56,7 +56,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/4_vazao_alveolo_"
+            f"temp/tg/figures/4_vazao_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -71,7 +71,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/5_pparcial_alveolo_"
+            f"temp/tg/figures/5_pparcial_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -85,7 +85,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/6_pparcial_capilar_"
+            f"temp/tg/figures/6_pparcial_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -99,7 +99,7 @@ def plot_tg(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/6_pparcial_capilar_"
+            f"temp/tg/figures/6_pparcial_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )

@@ -16,7 +16,7 @@ def plot_mp(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/1_pressoes_"
+            f"temp/mp/figures/1_pressoes_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -30,7 +30,7 @@ def plot_mp(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/2_fluxos_"
+            f"temp/mp/figures/2_fluxos_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
             f"{os.getenv('modo_atividade', 'repouso')}"
         )
@@ -44,7 +44,7 @@ def plot_mp(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/3_volumes_"
+            f"temp/mp/figures/3_volumes_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
             f"{os.getenv('modo_atividade', 'repouso')}"
         )
@@ -60,7 +60,7 @@ def plot_mp(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/4_volumes_saida_"
+            f"temp/mp/figures/4_volumes_saida_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -75,7 +75,7 @@ def plot_mp(t, x, y, u):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/5_pressoes_entrada_"
+            f"temp/mp/figures/5_pressoes_entrada_"
             f"{os.getenv('modo_ventilacao','normal')}"
             f"_{os.getenv('modo_atividade','repouso')}"
         )
@@ -97,7 +97,7 @@ def plot_mp(t, x, y, u):
     # plt.legend(loc="upper left")
     # if os.getenv("save_figures", default="") == 'TRUE':
     #     plt.savefig(
-    #         f"results/mp/figures/1_pressoes_"
+    #         f"temp/mp/figures/1_pressoes_"
     #         f"{os.getenv('modo_ventilacao','normal')}_"
     #         f"{os.getenv('modo_atividade','repouso')}"
     #     )
@@ -110,7 +110,7 @@ def plot_mp(t, x, y, u):
     # plt.legend(loc="upper left")
     # if os.getenv("save_figures", default="") == 'TRUE':
     #     plt.savefig(
-    #         f"results/mp/figures/2_fluxos_"
+    #         f"temp/mp/figures/2_fluxos_"
     #         f"{os.getenv('modo_ventilacao', 'normal')}_"
     #         f"{os.getenv('modo_atividade', 'repouso')}"
     #     )

@@ -6,11 +6,11 @@ import time as t
 import os
 
 from parametros import cts_mp
-from funcoes.derivada_mec_pulm import derivada_mp
-from funcoes.entrada_mec_pulm import entrada_mp
-from funcoes.saida_mec_pulm import saida_mp
-from funcoes.plot_mec_pulm import plot_mp
-from funcoes.controle_mec_pulm import controle_mp
+from functions.derivada_mec_pulm import derivada_mp
+from functions.entrada_mec_pulm import entrada_mp
+from functions.saida_mec_pulm import saida_mp
+from functions.plot_mec_pulm import plot_mp
+from functions.controle_mec_pulm import controle_mp
 
 from decorators.timefunc import timefunc
 
@@ -94,10 +94,10 @@ class MecanicaPulmonar:
         self.rungekutta4()
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
-            self.x_mp.to_csv(f"results/mp/data/variaveis_estado_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            self.u_mp.to_csv(f"results/mp/data/entradas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            # self.y_mp.to_csv(f"results/mp/data/saidas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            self.y_mp.to_csv(f"results/mp/data/saidas_dt_{dt}_{cts_mp['N']}.csv", sep=";", index=False)
+            self.x_mp.to_csv(f"temp/mp/data/variaveis_estado_dt_{dt}_{timestamp}.csv", sep=";", index=False)
+            self.u_mp.to_csv(f"temp/mp/data/entradas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
+            # self.y_mp.to_csv(f"temp/mp/data/saidas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
+            self.y_mp.to_csv(f"temp/mp/data/saidas_dt_{dt}_{cts_mp['N']}.csv", sep=";", index=False)
 
     def inicializa_var_estado(self):
         """

@@ -17,7 +17,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/1_pressoes_"
+            f"temp/mp/figures/1_pressoes_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -31,7 +31,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/2_fluxos_"
+            f"temp/mp/figures/2_fluxos_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
             f"{os.getenv('modo_atividade', 'repouso')}"
         )
@@ -45,7 +45,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/3_volumes_"
+            f"temp/mp/figures/3_volumes_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
             f"{os.getenv('modo_atividade', 'repouso')}"
         )
@@ -61,7 +61,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/4_volumes_saida_"
+            f"temp/mp/figures/4_volumes_saida_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -76,7 +76,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/mp/figures/5_pressoes_entrada_"
+            f"temp/mp/figures/5_pressoes_entrada_"
             f"{os.getenv('modo_ventilacao','normal')}"
             f"_{os.getenv('modo_atividade','repouso')}"
         )
@@ -94,7 +94,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/1_mols_alveolo_"
+            f"temp/tg/figures/1_mols_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         ) 
@@ -109,7 +109,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/2_mols_capilar_"
+            f"temp/tg/figures/2_mols_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -123,7 +123,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/3_mols_tecidual_"
+            f"temp/tg/figures/3_mols_tecidual_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -136,7 +136,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/4_vazao_alveolo_"
+            f"temp/tg/figures/4_vazao_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -151,7 +151,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/5_pparcial_alveolo_"
+            f"temp/tg/figures/5_pparcial_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
@@ -165,7 +165,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"results/tg/figures/6_pparcial_capilar_"
+            f"temp/tg/figures/6_pparcial_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )

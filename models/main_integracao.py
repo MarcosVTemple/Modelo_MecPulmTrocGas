@@ -6,26 +6,26 @@ import time as t
 import os
 
 from parametros import cts_mp, cts_tg, cts_int
-from funcoes.plot_integracao import plot_int
-from funcoes.controle_mec_pulm import controle_mp
+from functions.plot_integracao import plot_int
+from functions.controle_mec_pulm import controle_mp
 
-from funcoes.entrada_troc_gas import entrada_tg
-from funcoes.derivada_troc_gas import derivada_tg
-from funcoes.saida_troc_gas import saida_tg
-from funcoes.plot_troc_gas import plot_tg
+from functions.entrada_troc_gas import entrada_tg
+from functions.derivada_troc_gas import derivada_tg
+from functions.saida_troc_gas import saida_tg
+from functions.plot_troc_gas import plot_tg
 
 from parametros import cts_mp
-from funcoes.derivada_mec_pulm import derivada_mp
-from funcoes.entrada_mec_pulm import entrada_mp
-from funcoes.saida_mec_pulm import saida_mp
-from funcoes.plot_mec_pulm import plot_mp
+from functions.derivada_mec_pulm import derivada_mp
+from functions.entrada_mec_pulm import entrada_mp
+from functions.saida_mec_pulm import saida_mp
+from functions.plot_mec_pulm import plot_mp
 
 from decorators.timefunc import timefunc
 
 RR = cts_tg["RR"]
 dt = cts_int["dt"]
-Pfis = cts_tg["Pfis"]
-f = RR / 60
+T = cts_mp["T"]
+IEratio = cts_mp["IEratio"]
 
 Cl = cts_mp["Cl"]
 Ctr = cts_mp["Ctr"]
@@ -42,27 +42,12 @@ Vul = cts_mp["Vul"]
 Vut = cts_mp["Vut"]
 Vub = cts_mp["Vub"]
 VuA = cts_mp["VuA"]
-# Ti = cts_mp["Ti"]
-# Te = cts_mp["Te"]
-T = cts_mp["T"]
-# Te = cts_mp["IEratio"]*Ti
-tau = cts_mp["Te"]/5
-RR = cts_mp["RR"]
-IEratio = cts_mp["IEratio"]
-f = RR/60
 
 Pmus_min = cts_mp["Pmus_min"]
 Pao = cts_mp["Pao"]
 # Pvent = cts_mp["Pvent"]
 Pvent = None
 
-Pao_Pvent_zero = None
-dPmus_zero = None
-Pao_Pvent_zero = None
-dPmus_zero = None
-
-# int 
-dt = cts_int["dt"]
 
 
 class Integracao:
@@ -78,12 +63,6 @@ class Integracao:
         PA = np.zeros(cts_int["N"], dtype=int)
         Ppl = np.zeros(cts_int["N"], dtype=int)
         vetor_zero = np.zeros(cts_int["N"], dtype=int)
-        
-        Pao_Pvent_zero = np.zeros(cts_int["N"], dtype=int)
-        dPmus_zero = np.zeros(cts_int["N"], dtype=int)
-        Pao_Pvent_zero = np.zeros(cts_int["N"], dtype=int)
-        dPmus_zero = np.zeros(cts_int["N"], dtype=int)
-        
             
         self.t = np.arange(0, cts_int["N"]*cts_mp["dt"], cts_mp["dt"])
 
@@ -123,7 +102,6 @@ class Integracao:
         P_cap_N2 = np.zeros(cts_int["N"], dtype=int)
         VA_dot = np.zeros(cts_int["N"], dtype=int)
 
-        self.entrada_tg_from_mp = None
         self.t = np.arange(0, cts_int["N"] * cts_int["dt"], cts_int["dt"])
         self.x_tg = pd.DataFrame(
             {
@@ -172,8 +150,6 @@ class Integracao:
 
         self.x_tg.iloc[0, 5] = 150#181.56
         self.x_tg.iloc[0, 6] = 100 #85.23
-        # self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{cts_mp['N']}.csv", sep=";")['VA_dot']
-        # self.entrada_tg_from_mp = pd.read_csv(f"results/mp/data/saidas_dt_0.0004_{500000}.csv", sep=";")['VA_dot']
         
     def plot_integracao(self):
         plot_int(self.t, self.x_tg, self.y_tg, self.u_tg, self.x_mp, self.y_mp, self.u_mp)
@@ -186,32 +162,28 @@ class Integracao:
         # mp
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
-            self.x_mp.to_csv(f"results/mp/data/variaveis_estado_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            self.u_mp.to_csv(f"results/mp/data/entradas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            # self.y_mp.to_csv(f"results/mp/data/saidas_dt_{dt}_{timestamp}.csv", sep=";", index=False)
-            self.y_mp.to_csv(f"results/mp/data/saidas_dt_{dt}_{cts_mp['N']}.csv", sep=";", index=False)
+            self.x_mp.to_csv(f"temp/mp/data/variaveis_estado_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
+            self.u_mp.to_csv(f"temp/mp/data/entradas_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
+            self.y_mp.to_csv(f"temp/mp/data/saidas_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
         
         # tg
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
             self.x_tg.to_csv(
-                f"results/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
             self.y_tg.to_csv(
-                f"results/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
             
     def rungekutta4(self):
         RR = cts_mp["RR"]
-        RR_calculado = None
         Pmus_min = cts_mp["Pmus_min"]
-        Pmus_min_calculado = None
         tinicioT = 0
-        tinicioT_calculado = None
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
         P_cap_CO2 = self.y_tg.loc[0, "P_cap_CO2"]
         
@@ -219,19 +191,10 @@ class Integracao:
                 = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
         
         for i in tqdm(range(cts_int["N"]-1)):
-            ### mp
+            ### MECANICA PULMONAR
             
             # u em t
             t = self.t[i]
-
-            
-            # if t > 0:
-            #     RR = RR_calculado
-            #     Pmus_min = Pmus_min_calculado
-            #     tinicioT = tinicioT_calculado
-            
-            # tciclo, T, Te, Ti, RR_calculado, Pmus_min_calculado, tinicioT_calculado \
-            #     = controle_mp(t, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
             
             u_t_array, Pmus \
                 = entrada_mp(Pmus_min, Pao, tciclo, T, Te, Ti, Pvent)
@@ -259,30 +222,20 @@ class Integracao:
             k1_rk2 = derivada_mp(x, u_t, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
             k2_rk2 = derivada_mp(x + k1_rk2*dt, u_dt, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
 
-            # atribuindo os valores em x
-            x_rk2 = x + dt*(k1_rk2+k2_rk2)/2  # RK2
+            # valores em x
+            x_rk2 = x + dt*(k1_rk2+k2_rk2)/2
             self.x_mp.iloc[i+1, :] = pd.DataFrame(x_rk2.transpose())
 
-            # atribuindo os valores em y
+            # valores em y
             self.y_mp.iloc[i + 1, :] = saida_mp(x_rk2, u_t, Cl, Ctr, Cb, CA, Rtb, Rlt, Rml, RbA, Vul, Vut, Vub, VuA)
             VA_dot_mp = self.y_mp.iloc[i + 1, 1]
             
-            ### tg
-            if self.entrada_tg_from_mp is not None:
-                u_tg_t_array = self.entrada_tg_from_mp.iloc[i]
-                u_tg = u_tg_t_array
-                self.u_tg.iloc[i + 1, :] = u_tg_t_array
+            
+            ### TROCA DE GASES
+            
             # INTEGRACAO DOS SISTEMAS: SAIDA DE MP (VA_DOT) COMO ENTRADA DE TG (QA) - FLUXO ALVEOLAR
-            elif VA_dot_mp is not None:
-                u_tg = VA_dot_mp
-                # u_tg = u_tg_t_array
-                self.u_tg.iloc[i+1, :] = u_tg
-            else:
-                # u em t
-                phi = 2 * m.pi * f * t
-                u_tg_t_array = entrada_tg(phi=phi, Pfis=Pfis) # QA
-                u_tg = u_tg_t_array
-                self.u_tg.iloc[i+1, :] = u_tg_t_array
+            u_tg = VA_dot_mp
+            self.u_tg.iloc[i+1, :] = u_tg
 
             x_tg_array = self.x_tg.iloc[i, 0:].to_numpy()
             x_tg = x_tg_array
@@ -291,11 +244,11 @@ class Integracao:
             k1_tg_rk2 = derivada_tg(x_tg, u_tg, cts_tg)
             k2_tg_rk2 = derivada_tg(x_tg, u_tg, cts_tg)
 
-            # atribuindo os valores em x
+            # valores em x
             x_tg_rk2 = x_tg + dt*(k1_tg_rk2 + k2_tg_rk2)/2
             self.x_tg.iloc[i+1, :] = pd.DataFrame(np.matrix(x_tg_rk2))
 
-            # atribuindo os valores em y
+            # valores em y
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
             
             tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \

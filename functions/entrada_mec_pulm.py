@@ -1,7 +1,7 @@
 import numpy as np
 import math as m
 
-from funcoes.controle_mec_pulm import controle_mp
+from functions.controle_mec_pulm import controle_mp
 
 
 def entrada_mp(
