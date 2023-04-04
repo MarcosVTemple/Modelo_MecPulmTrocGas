@@ -7,6 +7,7 @@ import os
 
 from parametros import cts_mp, cts_tg, cts_int
 from funcoes.plot_integracao import plot_int
+from funcoes.controle_mec_pulm import controle_mp
 
 from funcoes.entrada_troc_gas import entrada_tg
 from funcoes.derivada_troc_gas import derivada_tg
@@ -41,8 +42,8 @@ Vul = cts_mp["Vul"]
 Vut = cts_mp["Vut"]
 Vub = cts_mp["Vub"]
 VuA = cts_mp["VuA"]
-Ti = cts_mp["Ti"]
-Te = cts_mp["Te"]
+# Ti = cts_mp["Ti"]
+# Te = cts_mp["Te"]
 T = cts_mp["T"]
 # Te = cts_mp["IEratio"]*Ti
 tau = cts_mp["Te"]/5
@@ -205,15 +206,36 @@ class Integracao:
             )
             
     def rungekutta4(self):
-         
+        RR = cts_mp["RR"]
+        RR_calculado = None
+        Pmus_min = cts_mp["Pmus_min"]
+        Pmus_min_calculado = None
+        tinicioT = 0
+        tinicioT_calculado = None
+        P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
+        P_cap_CO2 = self.y_tg.loc[0, "P_cap_CO2"]
+        
+        tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
+                = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
+        
         for i in tqdm(range(cts_int["N"]-1)):
             ### mp
             
             # u em t
             t = self.t[i]
-            # T, Ti, Te, RR = controle_mp(t, RR, PO2, PCO2...)
 
-            u_t_array, Pmus = entrada_mp(t, RR, IEratio, Pmus_min, tau, Pao, Pvent)
+            
+            # if t > 0:
+            #     RR = RR_calculado
+            #     Pmus_min = Pmus_min_calculado
+            #     tinicioT = tinicioT_calculado
+            
+            # tciclo, T, Te, Ti, RR_calculado, Pmus_min_calculado, tinicioT_calculado \
+            #     = controle_mp(t, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
+            
+            u_t_array, Pmus \
+                = entrada_mp(Pmus_min, Pao, tciclo, T, Te, Ti, Pvent)
+                
             self.u_mp.loc[i, 'dPmus'] = u_t_array[0]
             self.u_mp.loc[i, 'Pao_Pvent'] = u_t_array[1]
             self.u_mp.loc[i, 'Pmus'] = Pmus
@@ -221,7 +243,12 @@ class Integracao:
 
             # u em t+dt
             t_dt = t + dt
-            u_dt_array, Pmus_dt = entrada_mp(t_dt, RR, IEratio, Pmus_min, tau, Pao, Pvent)
+            
+            tciclo_dt, T_dt, Te_dt, Ti_dt, RR_dt, Pmus_min_dt, tinicioT_dt \
+                = controle_mp(t_dt, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
+            
+            u_dt_array, Pmus_dt \
+                = entrada_mp(Pmus_min_dt, Pao, tciclo_dt, T_dt, Te_dt, Ti_dt, Pvent)
             u_dt = np.matrix(u_dt_array).transpose()
 
             # x em t
@@ -240,7 +267,7 @@ class Integracao:
             self.y_mp.iloc[i + 1, :] = saida_mp(x_rk2, u_t, Cl, Ctr, Cb, CA, Rtb, Rlt, Rml, RbA, Vul, Vut, Vub, VuA)
             VA_dot_mp = self.y_mp.iloc[i + 1, 1]
             
-            ### tg 
+            ### tg
             if self.entrada_tg_from_mp is not None:
                 u_tg_t_array = self.entrada_tg_from_mp.iloc[i]
                 u_tg = u_tg_t_array
@@ -270,3 +297,6 @@ class Integracao:
 
             # atribuindo os valores em y
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
+            
+            tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
+                = tciclo_dt, T_dt, Te_dt, Ti_dt, RR_dt, Pmus_min_dt, tinicioT_dt

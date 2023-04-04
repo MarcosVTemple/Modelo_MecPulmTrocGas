@@ -68,7 +68,7 @@ cts_tg = {
         "Q_O2_Alb": ((0.3 / 1000) / 60),        # proporção do consumo do gás O2 [m3/s] 200-300 ml/min
         # "Q_O2": (Q_O2_Alb * (Patm / (R * T))) * 1000  # proporção do consumo do gás O2 [mmol/s]
         "Q_b": (5.6 / 60) / 1000,  # 5.6 L/min - 5.6/1000 m3
-        "RR": 12,                                   # breaths/min
+        "RR": 12,                                   # breaths/min eupneia (normal)
     # Aumentado
     #     "Q_O2_Alb": ((2.88/1000)/60) * 30000,       # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
         # "Q_b": ((5.6 / 60) / 1000) * 60,          # AUMENTADO APNEIA #5.6 L/min - 5.6/1000 m3

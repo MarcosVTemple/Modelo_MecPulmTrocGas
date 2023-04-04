@@ -10,6 +10,7 @@ from funcoes.derivada_mec_pulm import derivada_mp
 from funcoes.entrada_mec_pulm import entrada_mp
 from funcoes.saida_mec_pulm import saida_mp
 from funcoes.plot_mec_pulm import plot_mp
+from funcoes.controle_mec_pulm import controle_mp
 
 from decorators.timefunc import timefunc
 
@@ -115,57 +116,45 @@ class MecanicaPulmonar:
         plot_mp(self.t, self.x_mp, self.y_mp, self.u_mp)
 
     def rungekutta4(self):
+        RR_novo = None
+        RR_inicial = cts_mp["RR"]
+        
         for i in tqdm(range(cts_mp["N"]-1)):   # iterations per second
             # u em t
             t = self.t[i]
-            # T, Ti, Te, RR = controle_mp(t, RR, PO2, PCO2...)
+            P_cap_O2 = 0
+            P_cap_CO2 = 0
+            V = self.y_mp.loc[i, "V"]
+            
+            RR = RR_novo if RR_novo else RR_inicial
+            
+            tciclo, T, Te, Ti, RR_novo = controle_mp(t, RR, IEratio, dt, P_cap_O2, P_cap_CO2, V)
 
-            phi = 2 * m.pi * f * t
-            u_t_array, Pmus = entrada_mp(t, RR, IEratio, Pmus_min, tau, Pao, Pvent)
+            u_t_array, Pmus = entrada_mp(Pmus_min, tau, Pao, tciclo, T, Te, Ti, Pvent)
             self.u_mp.loc[i, 'dPmus'] = u_t_array[0]
             self.u_mp.loc[i, 'Pao_Pvent'] = u_t_array[1]
             self.u_mp.loc[i, 'Pmus'] = Pmus
             u_t = np.matrix(u_t_array).transpose()
 
-            # u em t+dt/2
-            t_meio = (t+(t+dt))/2
-            phi_meio = 2 * m.pi * f * t_meio
-            u_meio_array, Pmus_meio = entrada_mp(t_meio, RR, IEratio, Pmus_min, tau, Pao, Pvent)
-            u_meio = np.matrix(u_meio_array).transpose()
-
             # u em t+dt
             t_dt = t + dt
-            phi_dt = 2 * m.pi * f * t_dt
-            u_dt_array, Pmus_dt = entrada_mp(t_dt, RR, IEratio, Pmus_min, tau, Pao, Pvent)
+            u_dt_array, Pmus_dt = entrada_mp(Pmus_min, tau, Pao, tciclo, T, Te, Ti, Pvent)
             u_dt = np.matrix(u_dt_array).transpose()
 
             # x em t
             x_array = self.x_mp.iloc[i, 0:].to_numpy()
             x = np.matrix(x_array).transpose()
 
-            # constantes para RK4
-            # k1 = derivada_mp(x, u_t,  Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
-            # k2 = derivada_mp(x + k1*dt/2, u_meio, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
-            # k3 = derivada_mp(x + k2*dt/2, u_meio, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
-            # k4 = derivada_mp(x + k3*dt, u_dt, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
-
             # constantes para RK2
             k1_rk2 = derivada_mp(x, u_t, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
             k2_rk2 = derivada_mp(x + k1_rk2*dt, u_dt, Cl, Ctr, Ccw, Cb, CA, Rtb, Rlt, Rml, RbA)
 
             # atribuindo os valores em x
-            # x = x + dt*(k1+2*k2+2*k3+k4)/6  # RK4
             x_rk2 = x + dt*(k1_rk2+k2_rk2)/2  # RK2
-
-            # Pl = x[0, 0]
-            # Ptr = x[1, 0]
-            # Pb = x[2, 0]
-            # PA = x[3, 0]
-            # Ppl = x[4, 0]
-            # self.x_mp.iloc[i+1, :] = pd.DataFrame(x.transpose())
             self.x_mp.iloc[i+1, :] = pd.DataFrame(x_rk2.transpose())
 
             # atribuindo os valores em y
-            # self.y_mp.iloc[i+1, :] = saida_mp(x, u_t, Cl, Ctr, Cb, CA, Rtb, Rlt, Rml, RbA, Vul, Vut, Vub, VuA)
             self.y_mp.iloc[i + 1, :] = saida_mp(x_rk2, u_t, Cl, Ctr, Cb, CA, Rtb, Rlt, Rml, RbA, Vul, Vut, Vub, VuA)
+            VA_dot_mp = self.y_mp.iloc[i + 1, 1]
+
 

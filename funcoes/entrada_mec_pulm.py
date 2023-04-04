@@ -5,22 +5,14 @@ from funcoes.controle_mec_pulm import controle_mp
 
 
 def entrada_mp(
-    t: float,
-    RR: float,
-    IEratio: float,
     Pmus_min: float,
-    tau: float,
     Pao: float,
+    tciclo, T, Te, Ti,
     Pvent: float = None,
 ) -> np.array:
-
-    # T = 60/RR
-    # Te = (60/RR)/(1 + IEratio)
-    # Ti = T - Te
-    #
-    # tciclo = t % T
-
-    tciclo, T, Te, Ti = controle_mp(t, RR, IEratio)
+    
+    # tciclo, T, Te, Ti = controle_mp(t, RR, IEratio)
+    tau = Te/5
     if tciclo <= Ti:  # inspiracao
         Pmus = (-Pmus_min / (Ti * Te)) * (tciclo**2) + ((Pmus_min * T) / (Ti * Te)) * tciclo
         dPmus = 2 * (-Pmus_min / (Ti * Te)) * tciclo + (Pmus_min * T / (Ti * Te))
