@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
+def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     ### mp 
     plt.figure(1)
     plt.title("Mecânica Pulmonar - Pressões")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Pressão [cmH2O]")
     plt.plot(t, np.array(x_mp["Pl"]), color="r", label="Pl")
     plt.plot(t, np.array(x_mp["Ptr"]), color="b", label="Ptr")
@@ -24,7 +24,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(2)
     plt.title("Mecânica Pulmonar - Fluxos")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Fluxo [L/s]")
     plt.plot(t, np.array(y_mp["V_dot"]), color="r", label="V_dot")
     plt.plot(t, np.array(y_mp["VA_dot"]), color="b", label="VA_dot")
@@ -38,7 +38,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(3)
     plt.title("Mecânica Pulmonar - Volumes")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Volume [L]")
     plt.plot(t, np.array(y_mp["VA"]), color="k", label="VA")
     plt.plot(t, np.array(y_mp["V"]), label="V")
@@ -52,7 +52,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(4)
     plt.title("Mecânica Pulmonar - Volumes")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Volume [L]")
     plt.plot(t, np.array(y_mp["Vl"]), color="r", label="Vl")
     plt.plot(t, np.array(y_mp["Vtr"]), color="b", label="Vtr")
@@ -68,7 +68,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(5)
     plt.title("Mecânica Pulmonar - Pressões de entrada")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Pressão [cmH2O]")
     plt.plot(t, np.array(u_mp["Pmus"]), color="r", label="Pmus")
     plt.plot(t, np.array(u_mp["dPmus"]), color="k", label="dPmus")
@@ -86,7 +86,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
     ### tg
     plt.figure(6)
     plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Alveolar")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("nº de Mols [mmol]")
     plt.plot(t, np.array(x_tg["n_A_O2"]), color="r", label="n_A_O2")
     plt.plot(t, np.array(x_tg["n_A_CO2"]), color="b", label="n_A_CO2")
@@ -102,7 +102,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(7)
     plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Capilar")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("nº de Mols [mmol]")
     plt.plot(t, np.array(x_tg["n_cap_O2"]), color="r", label="n_cap_O2")
     plt.plot(t, np.array(x_tg["n_cap_CO2"]), color="k", label="n_cap_CO2")
@@ -116,7 +116,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(8)
     plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Tecidual")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("nº de Mols [mmol]")
     plt.plot(t, np.array(x_tg["n_t_O2"]), color="r", label="n_t_O2")
     plt.plot(t, np.array(x_tg["n_t_CO2"]), color="k", label="n_t_CO2")
@@ -130,7 +130,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(9)
     plt.title("Troca de Gases - Vazão Alveolar")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("Fluxo [L/s]")
     plt.plot(t, np.array(u_tg["VA_dot"]), color="r", label="VA_dot")
     plt.legend(loc="upper left")
@@ -143,7 +143,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(10)
     plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Alveolar")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("P parcial [mmHg]")
     plt.plot(t, np.array(y_tg["P_A_O2"]), color="r", label="P_A_O2")
     plt.plot(t, np.array(y_tg["P_A_CO2"]), color="b", label="P_A_CO2")
@@ -158,7 +158,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
 
     plt.figure(11)
     plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Capilar")
-    plt.xlabel("Tempo (s)")
+    plt.xlabel("Tempo [s]")
     plt.ylabel("P parcial [mmHg]")
     plt.plot(t, np.array(y_tg["P_cap_O2"]), color="r", label="P_cap_O2")
     plt.plot(t, np.array(y_tg["P_cap_CO2"]), color="b", label="P_cap_CO2")
@@ -169,5 +169,20 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp):
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
-    else:
-        plt.show()
+    
+        
+    plt.figure(12)
+    plt.title("Controle - Variação da Frequência Respiratória (RR)")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("RR [inc/min]")
+    plt.plot(t, np.array(y_int["RR"]), color="r", label="RR")
+    plt.legend(loc="upper left")
+        
+    plt.figure(13)
+    plt.title("Controle - Variação da Pressão Muscular Mínima (Pmus_min)")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("Pmus_min [cmH2O]")
+    plt.plot(t, np.array(y_int["Pmus_min"]), color="r", label="Pmus_min")
+    plt.legend(loc="upper left")
+    
+    plt.show()

@@ -22,10 +22,10 @@ from functions.plot_mec_pulm import plot_mp
 
 from decorators.timefunc import timefunc
 
-RR = cts_tg["RR"]
+RR = cts_int["RR"]
 dt = cts_int["dt"]
-T = cts_mp["T"]
-IEratio = cts_mp["IEratio"]
+T = cts_int["T"]
+IEratio = cts_int["IEratio"]
 
 Cl = cts_mp["Cl"]
 Ctr = cts_mp["Ctr"]
@@ -124,6 +124,12 @@ class Integracao:
                 'VA_dot': VA_dot,
             }
         )
+        self.y_int = pd.DataFrame(
+            {
+                'RR': np.zeros(cts_int["N"], dtype=int),
+                'Pmus_min': np.zeros(cts_int["N"], dtype=int),
+            }
+        )
 
     def inicializa_var_estado(self):
         # mp
@@ -148,11 +154,15 @@ class Integracao:
         self.x_tg.iloc[0, 3] = 0.535#0.5388
         self.x_tg.iloc[0, 4] = 0.23#0.2072
 
-        self.x_tg.iloc[0, 5] = 150#181.56
-        self.x_tg.iloc[0, 6] = 100 #85.23
+        self.x_tg.iloc[0, 5] = 280#181.56 # 
+        self.x_tg.iloc[0, 6] = 165 #85.23 #
+        
+        # calcular Pmusmin e QB 
+        
+        
         
     def plot_integracao(self):
-        plot_int(self.t, self.x_tg, self.y_tg, self.u_tg, self.x_mp, self.y_mp, self.u_mp)
+        plot_int(self.t, self.x_tg, self.y_tg, self.u_tg, self.x_mp, self.y_mp, self.u_mp, self.y_int)
         
     @timefunc
     def run_integracao(self):
@@ -181,14 +191,16 @@ class Integracao:
             )
             
     def rungekutta4(self):
-        RR = cts_mp["RR"]
+        RR = cts_int["RR"]
         Pmus_min = cts_mp["Pmus_min"]
         tinicioT = 0
+        tciclo_anterior = 0
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
         P_cap_CO2 = self.y_tg.loc[0, "P_cap_CO2"]
         
         tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
-                = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
+                = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo_anterior)
+                
         
         for i in tqdm(range(cts_int["N"]-1)):
             ### MECANICA PULMONAR
@@ -208,7 +220,7 @@ class Integracao:
             t_dt = t + dt
             
             tciclo_dt, T_dt, Te_dt, Ti_dt, RR_dt, Pmus_min_dt, tinicioT_dt \
-                = controle_mp(t_dt, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT)
+                = controle_mp(t_dt, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo)
             
             u_dt_array, Pmus_dt \
                 = entrada_mp(Pmus_min_dt, Pao, tciclo_dt, T_dt, Te_dt, Ti_dt, Pvent)
@@ -251,5 +263,12 @@ class Integracao:
             # valores em y
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
             
+            ### CONTROLE
+            self.y_int.iloc[i + 1, :] = np.append(RR_dt, Pmus_min_dt)
+            tciclo_anterior = tciclo
+            
             tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
                 = tciclo_dt, T_dt, Te_dt, Ti_dt, RR_dt, Pmus_min_dt, tinicioT_dt
+            
+            P_cap_O2 = self.y_tg.loc[i+1, "P_cap_O2"]
+            P_cap_CO2 = self.y_tg.loc[i+1, "P_cap_CO2"]

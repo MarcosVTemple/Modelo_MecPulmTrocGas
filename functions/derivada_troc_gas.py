@@ -63,7 +63,6 @@ def get_constants(cts_tg):
     D_CO2_Alb = cts_tg["D_CO2_Alb"]
     D_CO2 = D_CO2_Alb * (Patm / (R * T)) * 1000  # mmol
     Q_b = cts_tg["Q_b"]
-    Q_b = cts_tg["Q_b"]
     sigma = cts_tg["sigma"]
     Vt = cts_tg["Vt"]
     Vcap = cts_tg["Vcap"]
