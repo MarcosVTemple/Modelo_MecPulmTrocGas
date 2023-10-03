@@ -16,7 +16,6 @@ from decorators.timefunc import timefunc
 
 RR = cts_tg["RR"]
 dt = cts_tg["dt"]
-Pfis = cts_tg["Pfis"]
 f = RR / 60
 
 

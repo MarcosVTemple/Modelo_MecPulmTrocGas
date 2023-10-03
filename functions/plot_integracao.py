@@ -141,27 +141,44 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
             f"{os.getenv('modo_atividade','repouso')}"
         )
 
-    plt.figure(10)
-    plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Alveolar")
-    plt.xlabel("Tempo [s]")
-    plt.ylabel("P parcial [mmHg]")
-    plt.plot(t, np.array(y_tg["P_A_O2"]), color="r", label="P_A_O2")
-    plt.plot(t, np.array(y_tg["P_A_CO2"]), color="b", label="P_A_CO2")
-    plt.plot(t, np.array(y_tg["P_A_N2"]), color="g", label="P_A_N2")
-    plt.legend(loc="upper left")
-    if os.getenv("save_figures", default="") == 'TRUE':
-        plt.savefig(
-            f"temp/tg/figures/5_pparcial_alveolo_"
-            f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
-        )
+    # plt.figure(10)
+    # plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Alveolar")
+    # plt.xlabel("Tempo [s]")
+    # plt.ylabel("P parcial [mmHg]")
+    # plt.plot(t, np.array(y_tg["P_A_O2"]), color="r", label="P_A_O2")
+    # plt.plot(t, np.array(y_tg["P_A_CO2"]), color="b", label="P_A_CO2")
+    # plt.plot(t, np.array(y_tg["P_A_N2"]), color="g", label="P_A_N2")
+    # plt.legend(loc="upper left")
+    # if os.getenv("save_figures", default="") == 'TRUE':
+    #     plt.savefig(
+    #         f"temp/tg/figures/5_pparcial_alveolo_"
+    #         f"{os.getenv('modo_ventilacao','normal')}_"
+    #         f"{os.getenv('modo_atividade','repouso')}"
+    #     )
 
-    plt.figure(11)
-    plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Capilar")
+    # plt.figure(11)
+    # plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Capilar")
+    # plt.xlabel("Tempo [s]")
+    # plt.ylabel("P parcial [mmHg]")
+    # plt.plot(t, np.array(y_tg["P_cap_O2"]), color="r", label="P_cap_O2")
+    # plt.plot(t, np.array(y_tg["P_cap_CO2"]), color="b", label="P_cap_CO2")
+    # plt.legend(loc="upper left")
+    # if os.getenv("save_figures", default="") == 'TRUE':
+    #     plt.savefig(
+    #         f"temp/tg/figures/6_pparcial_capilar_"
+    #         f"{os.getenv('modo_ventilacao','normal')}_"
+    #         f"{os.getenv('modo_atividade','repouso')}"
+    #     )
+        
+    #### ALVEOLO + CAPILARES
+    plt.figure(10)
+    plt.title("Troca de Gases - Pressões Parciais dos Gases nos Compartimentos Alveolar e Capilar")
     plt.xlabel("Tempo [s]")
     plt.ylabel("P parcial [mmHg]")
-    plt.plot(t, np.array(y_tg["P_cap_O2"]), color="r", label="P_cap_O2")
-    plt.plot(t, np.array(y_tg["P_cap_CO2"]), color="b", label="P_cap_CO2")
+    plt.plot(t[1:], np.array(y_tg["P_A_O2"])[1:], color="r", label="P_A_O2", linestyle="dashed")
+    plt.plot(t[1:], np.array(y_tg["P_A_CO2"])[1:], color="b", label="P_A_CO2", linestyle="dashed")
+    plt.plot(t[1:], np.array(y_tg["P_cap_O2"])[1:], color="r", label="P_cap_O2", linestyle="dotted")
+    plt.plot(t[1:], np.array(y_tg["P_cap_CO2"])[1:], color="b", label="P_cap_CO2", linestyle="dotted")
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
@@ -169,20 +186,51 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
             f"{os.getenv('modo_ventilacao','normal')}_"
             f"{os.getenv('modo_atividade','repouso')}"
         )
+    ####
     
         
     plt.figure(12)
     plt.title("Controle - Variação da Frequência Respiratória (RR)")
     plt.xlabel("Tempo [s]")
     plt.ylabel("RR [inc/min]")
-    plt.plot(t, np.array(y_int["RR"]), color="r", label="RR")
+    plt.plot(t[1:], np.array(y_int["RR"])[1:], color="g", label="RR")
     plt.legend(loc="upper left")
         
     plt.figure(13)
     plt.title("Controle - Variação da Pressão Muscular Mínima (Pmus_min)")
     plt.xlabel("Tempo [s]")
     plt.ylabel("Pmus_min [cmH2O]")
-    plt.plot(t, np.array(y_int["Pmus_min"]), color="r", label="Pmus_min")
+    plt.plot(t[1:], np.array(y_int["Pmus_min"])[1:], color="b", label="Pmus_min")
     plt.legend(loc="upper left")
-    
+    plt.legend(loc="upper left")
+        
+    plt.figure(14)
+    plt.title("Controle - Variação do Débito Cardíaco (Q_b)")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("Q_b [L/min]")
+    plt.plot(t[1:], np.array(y_int["Q_b"])[1:], color="r", label="Q_b")
+    plt.legend(loc="upper left")
     plt.show()
+    
+        
+    fig, ax1 = plt.subplots()
+    
+    ax1.set_xlabel("Tempo [s]")
+    ax1.set_ylabel("RR [inc/min]")
+    ax1.plot(t[1:], np.array(y_int["RR"])[1:], color="g")
+    ax1.tick_params(axis='y', labelcolor="g")
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    ax2.set_ylabel("Pmus_min [cmH2O]")  # we already handled the x-label with ax1
+    ax2.plot(t[1:], np.array(y_int["Pmus_min"])[1:], color="b")
+    ax2.tick_params(axis='y', labelcolor="b")
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.show()
+    a = 0
+    
+    pcapo2final = np.array(y_tg["P_cap_O2"])[-1]
+    pcapco2final = np.array(y_tg["P_cap_CO2"])[-1]
+    print(f"P_cap_O2: {pcapo2final}")
+    print(f"P_cap_CO2: {pcapco2final}")

@@ -7,7 +7,7 @@ import os
 
 from parametros import cts_mp, cts_tg, cts_int
 from functions.plot_integracao import plot_int
-from functions.controle_mec_pulm import controle_mp
+from functions.controle_mec_pulm import controle_mp, get_params_controle_calc
 
 from functions.entrada_troc_gas import entrada_tg
 from functions.derivada_troc_gas import derivada_tg
@@ -126,8 +126,9 @@ class Integracao:
         )
         self.y_int = pd.DataFrame(
             {
-                'RR': np.zeros(cts_int["N"], dtype=int),
-                'Pmus_min': np.zeros(cts_int["N"], dtype=int),
+                'RR': np.zeros(cts_int["N"], dtype=float),
+                'Pmus_min': np.zeros(cts_int["N"], dtype=float),
+                'Q_b': np.zeros(cts_int["N"], dtype=float),
             }
         )
 
@@ -146,19 +147,19 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        nt_inicial = ((cts_tg["Patm"]*cts_tg["VA_t"])/(cts_tg["R"]*cts_tg["Temp"]))*1000
-        self.x_tg.iloc[0, 0] = nt_inicial*cts_tg["f_O2"]  # 6.7145
-        self.x_tg.iloc[0, 1] = nt_inicial*cts_tg["f_CO2"]  # 2.5817
-        self.x_tg.iloc[0, 2] = nt_inicial*cts_tg["f_N2_H2O"]
+        # nt_inicial = ((cts_tg["Patm"]*cts_tg["VA_t"])/(cts_tg["R"]*cts_tg["Temp"]))*1000
+        self.x_tg.iloc[0, 0] = 6.0003 # nt_inicial*cts_tg["f_O2"]  # 6.7145
+        self.x_tg.iloc[0, 1] = 2.8964 # nt_inicial*cts_tg["f_CO2"]  # 2.5817
+        self.x_tg.iloc[0, 2] = 40.3710 # nt_inicial*cts_tg["f_N2_H2O"]
 
-        self.x_tg.iloc[0, 3] = 0.535#0.5388
-        self.x_tg.iloc[0, 4] = 0.23#0.2072
+        self.x_tg.iloc[0, 3] = 0.53079 #0.5388
+        self.x_tg.iloc[0, 4] = 0.23326 #0.2072
 
-        self.x_tg.iloc[0, 5] = 280#181.56 # 
-        self.x_tg.iloc[0, 6] = 165 #85.23 #
+        self.x_tg.iloc[0, 5] = 179.06 #280 consumo aumentado # 181.56 repouso  
+        self.x_tg.iloc[0, 6] = 95.067 #165 consumo aumentado # 85.23 repouso 
         
-        # calcular Pmusmin e QB 
-        
+        # int
+        cts_int["Pmusmin"], cts_tg["Q_b"] = get_params_controle_calc(RR=RR)
         
         
     def plot_integracao(self):
@@ -192,7 +193,7 @@ class Integracao:
             
     def rungekutta4(self):
         RR = cts_int["RR"]
-        Pmus_min = cts_mp["Pmus_min"]
+        Pmus_min = cts_int["Pmus_min"]
         tinicioT = 0
         tciclo_anterior = 0
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
@@ -264,7 +265,8 @@ class Integracao:
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
             
             ### CONTROLE
-            self.y_int.iloc[i + 1, :] = np.append(RR_dt, Pmus_min_dt)
+            Q_b = cts_tg["Q_b"]*1000*60
+            self.y_int.iloc[i + 1, :] = np.array([RR_dt, Pmus_min_dt, Q_b])
             tciclo_anterior = tciclo
             
             tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \

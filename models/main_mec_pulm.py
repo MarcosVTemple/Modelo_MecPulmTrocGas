@@ -118,7 +118,16 @@ class MecanicaPulmonar:
     def rungekutta4(self):
         RR_novo = None
         RR_inicial = cts_mp["RR"]
+        RR = cts_mp["RR"]
+        Pmus_min = cts_mp["Pmus_min"]
+        tinicioT = 0
+        tciclo_anterior = 0
+        P_cap_O2 = 0
+        P_cap_CO2 = 0
         
+        tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
+                = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo_anterior)
+                
         for i in tqdm(range(cts_mp["N"]-1)):   # iterations per second
             # u em t
             t = self.t[i]
@@ -128,17 +137,22 @@ class MecanicaPulmonar:
             
             RR = RR_novo if RR_novo else RR_inicial
             
-            tciclo, T, Te, Ti, RR_novo = controle_mp(t, RR, IEratio, dt, P_cap_O2, P_cap_CO2, V)
+            # u em t+dt
+            t_dt = t + dt
+            
+            tciclo_dt, T_dt, Te_dt, Ti_dt, RR_dt, Pmus_min_dt, tinicioT_dt \
+                = controle_mp(t_dt, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo)
 
-            u_t_array, Pmus = entrada_mp(Pmus_min, tau, Pao, tciclo, T, Te, Ti, Pvent)
+            u_t_array, Pmus \
+                = entrada_mp(Pmus_min, Pao, tciclo, T, Te, Ti, Pvent)
+                
             self.u_mp.loc[i, 'dPmus'] = u_t_array[0]
             self.u_mp.loc[i, 'Pao_Pvent'] = u_t_array[1]
             self.u_mp.loc[i, 'Pmus'] = Pmus
             u_t = np.matrix(u_t_array).transpose()
 
-            # u em t+dt
-            t_dt = t + dt
-            u_dt_array, Pmus_dt = entrada_mp(Pmus_min, tau, Pao, tciclo, T, Te, Ti, Pvent)
+            u_dt_array, Pmus_dt \
+                = entrada_mp(Pmus_min_dt, Pao, tciclo_dt, T_dt, Te_dt, Ti_dt, Pvent)
             u_dt = np.matrix(u_dt_array).transpose()
 
             # x em t

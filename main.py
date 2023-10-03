@@ -29,5 +29,16 @@ if __name__ == "__main__":
         int_obj = Integracao()
         int_obj.run_integracao()
         int_obj.plot_integracao()
+        
+        # int_teste_1 = Integracao()
+        # int_teste_1.run_integracao()
+        
+        # int_teste_2 = Integracao()
+        # int_teste_2.run_integracao()
+        
+        # int_teste_3 = Integracao()
+        # int_teste_3.run_integracao()
+        
+        # plot(int_teste_1.y_int,int_teste_2.y_int,int_teste_3.y_int) # unir os testes no mesmo grafico
     except KeyboardInterrupt:
         print("\nExecução interrompida pelo usuário")
