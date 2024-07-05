@@ -55,27 +55,21 @@ def get_constants(cts_tg):
     f_O2 = cts_tg["f_O2"]
     f_CO2 = cts_tg["f_CO2"]
     f_N = cts_tg["f_N2_H2O"]
-    D_O2_Alb = cts_tg["D_O2_Alb"]
-    D_O2 = D_O2_Alb * (Patm / (R * T)) * 1000  # mmols
-    D_CO2_Alb = cts_tg["D_CO2_Alb"]
-    D_CO2 = D_CO2_Alb * (Patm / (R * T)) * 1000  # mmol
+    D_O2 = cts_tg["D_O2"]
+    D_CO2 = cts_tg["D_CO2"]
     Q_b = cts_tg["Q_b"]
     sigma = cts_tg["sigma"]
     Vt = cts_tg["Vt"]
     Vcap = cts_tg["Vcap"]
     c_t_O2_fis = cts_tg["c_t_O2_fis"]
     Q_O2_Alb = cts_tg["Q_O2_Alb"]
-    # Q_O2 = (Q_O2_Alb * (Patm / (R * T))) * 1000  # mmol/s
-
-    # D_O2 = D_O2_Alb * ((Patm) / (R * T)) * 1000
-    # D_CO2 = D_CO2_Alb * ((Patm) / (R * T)) * 1000
     
     # calculado com base nos valores iniciais de n para os 3 compartimentos e derivada zero
-    D_O2 = 0.00010646783207639284 
-    D_O2 = D_O2 - D_O2 * 0.76
+    # D_O2 = 0.00010646783207639284 
+    # D_O2 = D_O2 - D_O2 * 0.76
    
-    D_CO2 = 4.3922884135450315e-05 # (aumentar em 40%)
-    D_CO2 = D_CO2 - D_CO2 * 0.98
+    # D_CO2 = 4.3922884135450315e-05 # (aumentar em 40%)
+    # D_CO2 = D_CO2 - D_CO2 * 0.98
    
     Q_O2 = (Q_O2_Alb * (Patm / (R * T))) * 1000
 

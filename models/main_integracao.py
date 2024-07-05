@@ -57,12 +57,12 @@ class Integracao:
             cts_int["N"] = int(int(tempo_simulacao)/cts_int["dt"])
 
         # mp
-        Pl = np.zeros(cts_int["N"], dtype=int)
-        Ptr = np.zeros(cts_int["N"], dtype=int)
-        Pb = np.zeros(cts_int["N"], dtype=int)
-        PA = np.zeros(cts_int["N"], dtype=int)
-        Ppl = np.zeros(cts_int["N"], dtype=int)
-        vetor_zero = np.zeros(cts_int["N"], dtype=int)
+        Pl = np.zeros(cts_int["N"], dtype=float)
+        Ptr = np.zeros(cts_int["N"], dtype=float)
+        Pb = np.zeros(cts_int["N"], dtype=float)
+        PA = np.zeros(cts_int["N"], dtype=float)
+        Ppl = np.zeros(cts_int["N"], dtype=float)
+        vetor_zero = np.zeros(cts_int["N"], dtype=float)
             
         self.t = np.arange(0, cts_int["N"]*cts_mp["dt"], cts_mp["dt"])
 
@@ -85,22 +85,22 @@ class Integracao:
         )
 
         # tg
-        n_A_O2 = np.zeros(cts_int["N"], dtype=int)
-        n_A_CO2 = np.zeros(cts_int["N"], dtype=int)
-        n_A_N2 = np.zeros(cts_int["N"], dtype=int)
-        n_cap_O2 = np.zeros(cts_int["N"], dtype=int)
-        n_cap_CO2 = np.zeros(cts_int["N"], dtype=int)
-        n_cap_N2 = np.zeros(cts_int["N"], dtype=int)
-        n_t_O2 = np.zeros(cts_int["N"], dtype=int)
-        n_t_CO2 = np.zeros(cts_int["N"], dtype=int)
-        n_t_N2 = np.zeros(cts_int["N"], dtype=int)
-        P_A_O2 = np.zeros(cts_int["N"], dtype=int)
-        P_A_CO2 = np.zeros(cts_int["N"], dtype=int)
-        P_A_N2 = np.zeros(cts_int["N"], dtype=int)
-        P_cap_O2 = np.zeros(cts_int["N"], dtype=int)
-        P_cap_CO2 = np.zeros(cts_int["N"], dtype=int)
-        P_cap_N2 = np.zeros(cts_int["N"], dtype=int)
-        VA_dot = np.zeros(cts_int["N"], dtype=int)
+        n_A_O2 = np.zeros(cts_int["N"], dtype=float)
+        n_A_CO2 = np.zeros(cts_int["N"], dtype=float)
+        n_A_N2 = np.zeros(cts_int["N"], dtype=float)
+        n_cap_O2 = np.zeros(cts_int["N"], dtype=float)
+        n_cap_CO2 = np.zeros(cts_int["N"], dtype=float)
+        n_cap_N2 = np.zeros(cts_int["N"], dtype=float)
+        n_t_O2 = np.zeros(cts_int["N"], dtype=float)
+        n_t_CO2 = np.zeros(cts_int["N"], dtype=float)
+        n_t_N2 = np.zeros(cts_int["N"], dtype=float)
+        P_A_O2 = np.zeros(cts_int["N"], dtype=float)
+        P_A_CO2 = np.zeros(cts_int["N"], dtype=float)
+        P_A_N2 = np.zeros(cts_int["N"], dtype=float)
+        P_cap_O2 = np.zeros(cts_int["N"], dtype=float)
+        P_cap_CO2 = np.zeros(cts_int["N"], dtype=float)
+        P_cap_N2 = np.zeros(cts_int["N"], dtype=float)
+        VA_dot = np.zeros(cts_int["N"], dtype=float)
 
         self.t = np.arange(0, cts_int["N"] * cts_int["dt"], cts_int["dt"])
         self.x_tg = pd.DataFrame(
@@ -126,7 +126,7 @@ class Integracao:
         )
         self.y_int = pd.DataFrame(
             {
-                'RR': np.zeros(cts_int["N"], dtype=float),
+                'RR': np.zeros(cts_int["N"],    dtype=float),
                 'Pmus_min': np.zeros(cts_int["N"], dtype=float),
                 'Q_b': np.zeros(cts_int["N"], dtype=float),
             }
@@ -147,16 +147,15 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        # nt_inicial = ((cts_tg["Patm"]*cts_tg["VA_t"])/(cts_tg["R"]*cts_tg["Temp"]))*1000
-        self.x_tg.iloc[0, 0] = 6.0003 # nt_inicial*cts_tg["f_O2"]  # 6.7145
-        self.x_tg.iloc[0, 1] = 2.8964 # nt_inicial*cts_tg["f_CO2"]  # 2.5817
-        self.x_tg.iloc[0, 2] = 40.3710 # nt_inicial*cts_tg["f_N2_H2O"]
+        self.x_tg.iloc[0, 0] = 12.73 #recupe 16.16# aumentado 11.94 # 12.73 repouso
+        self.x_tg.iloc[0, 1] = 0.35 #recupe  0.73# aumentado 0.36 # 0.35 repouso
+        self.x_tg.iloc[0, 2] = 58.23 #recupe  99.02# aumentado 58.34 # 58.23 repouso
 
-        self.x_tg.iloc[0, 3] = 0.53079 #0.5388
-        self.x_tg.iloc[0, 4] = 0.23326 #0.2072
+        self.x_tg.iloc[0, 3] = 0.65#recupe   1.00# aumentado 0.68 # 0.65 repouso
+        self.x_tg.iloc[0, 4] = 0.25#recupe   0.49# aumentado 0.26 # 0.25 repouso
 
-        self.x_tg.iloc[0, 5] = 179.06 #280 consumo aumentado # 181.56 repouso  
-        self.x_tg.iloc[0, 6] = 95.067 #165 consumo aumentado # 85.23 repouso 
+        self.x_tg.iloc[0, 5] =  188.87 #recupe  241.00# aumentado 198.75 # 188.87 repouso
+        self.x_tg.iloc[0, 6] =  98.13 #recupe  189.56# aumentado 101.48 # 98.13 repouso
         
         # int
         cts_int["Pmusmin"], cts_tg["Q_b"] = get_params_controle_calc(RR=RR)
@@ -173,23 +172,24 @@ class Integracao:
         # mp
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
-            self.x_mp.to_csv(f"temp/mp/data/variaveis_estado_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
-            self.u_mp.to_csv(f"temp/mp/data/entradas_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
-            self.y_mp.to_csv(f"temp/mp/data/saidas_dt_{dt}_{cts_mp['N']}_{timestamp}.csv", sep=";", index=False)
+            self.x_mp.to_csv(f"temp/int/data/mecanica_pulmonar_variaveis_estado_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
+            self.u_mp.to_csv(f"temp/int/data/mecanica_pulmonar_entradas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
+            self.y_mp.to_csv(f"temp/int/data/mecanica_pulmonar_saidas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
         
         # tg
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
             self.x_tg.to_csv(
-                f"temp/tg/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/int/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
             self.y_tg.to_csv(
-                f"temp/tg/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/int/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
+        
             
     def rungekutta4(self):
         RR = cts_int["RR"]

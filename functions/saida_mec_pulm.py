@@ -18,8 +18,8 @@ def saida_mp(
     Vub: float,
     VuA: float,
 ) -> ndarray:
-    Pl, Ptr, Pb, PA, Ppl = x[:, 0]
-    dPmus, Pao = u[:, 0]
+    Pl, Ptr, Pb, PA, Ppl = [val[0, 0] for val in x[:, 0]]
+    dPmus, Pao = [val[0, 0] for val in u[:, 0]]
 
     V_dot = -(1 / Rml) * Pl + (1 / Rml) * Pao
     VA_dot = (1 / RbA) * Pb + (-1 / RbA) * PA

@@ -1,9 +1,14 @@
 import os
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
+TEST_CASE = ""
+
 
 def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
+    timestamp = str(int(round(time.time() * 1000))) 
+     
     ### mp 
     plt.figure(1)
     plt.title("Mecânica Pulmonar - Pressões")
@@ -17,9 +22,9 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/mp/figures/1_pressoes_"
+            f"temp/int/figures/1_pressoes_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
 
     plt.figure(2)
@@ -31,54 +36,54 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/mp/figures/2_fluxos_"
+            f"temp/int/figures/2_fluxos_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
-            f"{os.getenv('modo_atividade', 'repouso')}"
+            f"{os.getenv('modo_atividade', 'repouso')}_{timestamp}"
         )
 
     plt.figure(3)
     plt.title("Mecânica Pulmonar - Volumes")
     plt.xlabel("Tempo [s]")
     plt.ylabel("Volume [L]")
-    plt.plot(t, np.array(y_mp["VA"]), color="k", label="VA")
-    plt.plot(t, np.array(y_mp["V"]), label="V")
+    plt.plot(t[1:], np.array(y_mp["VA"])[1:], color="k", label="VA")
+    plt.plot(t[1:], np.array(y_mp["V"])[1:], label="V")
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/mp/figures/3_volumes_"
+            f"temp/int/figures/3_volumes_"
             f"{os.getenv('modo_ventilacao', 'normal')}_"
-            f"{os.getenv('modo_atividade', 'repouso')}"
+            f"{os.getenv('modo_atividade', 'repouso')}_{timestamp}"
         )
 
     plt.figure(4)
     plt.title("Mecânica Pulmonar - Volumes")
     plt.xlabel("Tempo [s]")
     plt.ylabel("Volume [L]")
-    plt.plot(t, np.array(y_mp["Vl"]), color="r", label="Vl")
-    plt.plot(t, np.array(y_mp["Vtr"]), color="b", label="Vtr")
-    plt.plot(t, np.array(y_mp["Vb"]), color="g", label="Vb")
-    plt.plot(t, np.array(y_mp["VD"]), color="y", label="VD")
+    plt.plot(t[1:], np.array(y_mp["Vl"])[1:], color="r", label="Vl")
+    plt.plot(t[1:], np.array(y_mp["Vtr"])[1:], color="b", label="Vtr")
+    plt.plot(t[1:], np.array(y_mp["Vb"])[1:], color="g", label="Vb")
+    plt.plot(t[1:], np.array(y_mp["VD"])[1:], color="y", label="VD")
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/mp/figures/4_volumes_saida_"
+            f"temp/int/figures/4_volumes_saida_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
 
     plt.figure(5)
     plt.title("Mecânica Pulmonar - Pressões de entrada")
     plt.xlabel("Tempo [s]")
     plt.ylabel("Pressão [cmH2O]")
-    plt.plot(t, np.array(u_mp["Pmus"]), color="r", label="Pmus")
-    plt.plot(t, np.array(u_mp["dPmus"]), color="k", label="dPmus")
+    plt.plot(t[1:], np.array(u_mp["Pmus"])[1:], color="r", label="Pmus")
+    plt.plot(t[1:], np.array(u_mp["dPmus"])[1:], color="k", label="dPmus")
     # plt.plot(t, derivada_pmus, color="b", label="derivada_pmus")
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/mp/figures/5_pressoes_entrada_"
+            f"temp/int/figures/5_pressoes_entrada_"
             f"{os.getenv('modo_ventilacao','normal')}"
-            f"_{os.getenv('modo_atividade','repouso')}"
+            f"_{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
     # plt.show()
 
@@ -94,9 +99,9 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/tg/figures/1_mols_alveolo_"
+            f"temp/int/figures/1_mols_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         ) 
     # plt.show()
 
@@ -109,9 +114,9 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/tg/figures/2_mols_capilar_"
+            f"temp/int/figures/2_mols_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
 
     plt.figure(8)
@@ -123,9 +128,9 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/tg/figures/3_mols_tecidual_"
+            f"temp/int/figures/3_mols_tecidual_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
 
     plt.figure(9)
@@ -136,9 +141,9 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/tg/figures/4_vazao_alveolo_"
+            f"temp/int/figures/4_vazao_alveolo_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
         )
 
     # plt.figure(10)
@@ -151,7 +156,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     # plt.legend(loc="upper left")
     # if os.getenv("save_figures", default="") == 'TRUE':
     #     plt.savefig(
-    #         f"temp/tg/figures/5_pparcial_alveolo_"
+    #         f"temp/int/figures/5_pparcial_alveolo_"
     #         f"{os.getenv('modo_ventilacao','normal')}_"
     #         f"{os.getenv('modo_atividade','repouso')}"
     #     )
@@ -165,7 +170,7 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     # plt.legend(loc="upper left")
     # if os.getenv("save_figures", default="") == 'TRUE':
     #     plt.savefig(
-    #         f"temp/tg/figures/6_pparcial_capilar_"
+    #         f"temp/int/figures/6_pparcial_capilar_"
     #         f"{os.getenv('modo_ventilacao','normal')}_"
     #         f"{os.getenv('modo_atividade','repouso')}"
     #     )
@@ -182,9 +187,10 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.legend(loc="upper left")
     if os.getenv("save_figures", default="") == 'TRUE':
         plt.savefig(
-            f"temp/tg/figures/6_pparcial_capilar_"
+            f"temp/int/figures/6_pparcial_capilar_"
             f"{os.getenv('modo_ventilacao','normal')}_"
-            f"{os.getenv('modo_atividade','repouso')}"
+            f"{os.getenv('modo_atividade','repouso')}_"
+            f"{TEST_CASE}_{timestamp}"
         )
     ####
     
@@ -195,6 +201,13 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.ylabel("RR [inc/min]")
     plt.plot(t[1:], np.array(y_int["RR"])[1:], color="g", label="RR")
     plt.legend(loc="upper left")
+    if os.getenv("save_figures", default="") == 'TRUE':
+        plt.savefig(
+            f"temp/int/figures/7_variacao_frequencia_resp_"
+            f"{os.getenv('modo_ventilacao','normal')}_"
+            f"{os.getenv('modo_atividade','repouso')}_"
+            f"{TEST_CASE}_{timestamp}"
+        )
         
     plt.figure(13)
     plt.title("Controle - Variação da Pressão Muscular Mínima (Pmus_min)")
@@ -202,7 +215,13 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.ylabel("Pmus_min [cmH2O]")
     plt.plot(t[1:], np.array(y_int["Pmus_min"])[1:], color="b", label="Pmus_min")
     plt.legend(loc="upper left")
-    plt.legend(loc="upper left")
+    if os.getenv("save_figures", default="") == 'TRUE':
+        plt.savefig(
+            f"temp/int/figures/13_variacao_pmusmin_"
+            f"{os.getenv('modo_ventilacao','normal')}_"
+            f"{os.getenv('modo_atividade','repouso')}_"
+            f"{TEST_CASE}_{timestamp}"
+        )
         
     plt.figure(14)
     plt.title("Controle - Variação do Débito Cardíaco (Q_b)")
@@ -210,26 +229,15 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     plt.ylabel("Q_b [L/min]")
     plt.plot(t[1:], np.array(y_int["Q_b"])[1:], color="r", label="Q_b")
     plt.legend(loc="upper left")
+    if os.getenv("save_figures", default="") == 'TRUE':
+        plt.savefig(
+            f"temp/int/figures/8_variacao_debito_cardiaco_"
+            f"{os.getenv('modo_ventilacao','normal')}_"
+            f"{os.getenv('modo_atividade','repouso')}_{timestamp}"
+        )
     plt.show()
     
         
-    fig, ax1 = plt.subplots()
-    
-    ax1.set_xlabel("Tempo [s]")
-    ax1.set_ylabel("RR [inc/min]")
-    ax1.plot(t[1:], np.array(y_int["RR"])[1:], color="g")
-    ax1.tick_params(axis='y', labelcolor="g")
-
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-    ax2.set_ylabel("Pmus_min [cmH2O]")  # we already handled the x-label with ax1
-    ax2.plot(t[1:], np.array(y_int["Pmus_min"])[1:], color="b")
-    ax2.tick_params(axis='y', labelcolor="b")
-
-    fig.tight_layout()  # otherwise the right y-label is slightly clipped
-    fig.show()
-    a = 0
-    
     pcapo2final = np.array(y_tg["P_cap_O2"])[-1]
     pcapco2final = np.array(y_tg["P_cap_CO2"])[-1]
     print(f"P_cap_O2: {pcapo2final}")
