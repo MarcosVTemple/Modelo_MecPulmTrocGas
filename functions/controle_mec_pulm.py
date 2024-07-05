@@ -23,29 +23,26 @@ def controle_mp(t: float, RR: float, IEratio: float, dt: float, P_cap_O2: float,
 
     
     if inicio_do_ciclo_boolean and t > 0:
-        """
-        Calcular tinicioT
-        
-        """
         tinicioT = tinicioT + T
     
-    
-        if P_cap_CO2 < 42:
-            if RR >= 12.5: 
-                RR -= 0.125
+        incremento_rr = 1
+        if P_cap_CO2 > 40 or P_cap_O2 < 70:
+             if RR <= 21.1:
+                RR += incremento_rr
                 Pmus_min, Q_b = get_params_controle_calc(RR)
         else:
-            if RR <= 20: 
-                RR += 0.125
-                Pmus_min, Q_b = get_params_controle_calc(RR)
+            if RR >= 12.5: 
+                RR -= incremento_rr
+                Pmus_min, Q_b = get_params_controle_calc(RR)           
         
-        Q_b = cts_tg["Q_b"]*1000*60
+        Q_b_litro_minuto = cts_tg["Q_b"]*1000*60
         
         print(f"Pressoes O2 e CO2: {P_cap_O2}, {P_cap_CO2}")
-        print(f"P_cap_CO2 > 37: {P_cap_CO2 > 37}")
         print(f"Novo Pmus_min: {Pmus_min}")
         print(f"Nova frequencia: {RR}")
-        print(f"Novo Débito Cardíaco: {Q_b}")
+        print(f"Novo Débito Cardíaco: {Q_b_litro_minuto}")
+        print(f"Nova difusao O2: {cts_tg['D_O2']}")
+        print(f"Nova difusao CO2: {cts_tg['D_CO2']}")
         print(f"tinicioT: {tinicioT}")
         print(f"tciclo: {tciclo}")
         print(f"tciclo_anterior: {tciclo_anterior}")
@@ -55,10 +52,6 @@ def controle_mp(t: float, RR: float, IEratio: float, dt: float, P_cap_O2: float,
         print(f"t: {t}")
         print(f"dt: {dt}")
         
-        """
-        Calcular novos T, Ti, Te
-        
-        """
         T = 60 / RR
         Te = (60 / RR) / (1 + IEratio)
         Ti = T - Te
@@ -109,7 +102,15 @@ def get_params_controle_calc(RR: float) -> Tuple[float,float]:
     
     Q_b = ((Q_b_corrida - Q_b_repouso)*(f_medio - f_repouso) / (f_corrida - f_repouso) ) + Q_b_repouso
     cts_tg["Q_b"] = Q_b
+       
+    D_O2_repouso = cts_int["D_O2_repouso"]
+    D_O2_corrida = cts_int["D_O2_corrida"]
+    D_CO2_repouso = cts_int["D_CO2_repouso"]
+    D_CO2_corrida = cts_int["D_CO2_corrida"]
+       
+    D_O2 = ((D_O2_corrida - D_O2_repouso)*(Q_b - Q_b_repouso) / (Q_b_corrida - Q_b_repouso) ) + D_O2_repouso
+    cts_tg["D_O2"] = D_O2
+    D_CO2 = ((D_CO2_corrida - D_CO2_repouso)*(Q_b - Q_b_repouso) / (Q_b_corrida - Q_b_repouso) ) + D_CO2_repouso
+    cts_tg["D_CO2"] = D_CO2
     
-    # if Q_b*1000*60 < 5.6:
-    #     Q_b = (5.6 / 60) / 1000
     return Pmus_min, Q_b

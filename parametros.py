@@ -44,9 +44,9 @@ cts_tg = {
     # "f_CO2": 0.0526,  # fração do gas no alveolo
     # "f_N2_H2O": 0.8105,  # fração do gas no alveolo
     "D_O2_Alb": 32.253e-10,         # 26 [ml/min.mmHg] - 0.00043 [L/s.mmHg] - 32.253e-10 [m³/s.Pa]
-    # "D_O2": (D_O2_Alb) * ((Patm) / (R * T)) * 1000  # convertido em mmols
+    "D_O2": 2.555227969833428e-05,
     "D_CO2_Alb": 22.502e-09,        # 180 [ml/min.mmHg] - 0.003 [L/s.mmHg] - 22.502e-09 [m³/s.Pa]
-    # "D_CO2": D_CO2_Alb * ((Patm) / (R * T)) * 1000  # convertido em mmols
+    "D_CO2": 8.78457682709007e-07,
     # derivada capilar
     "sigma": 0.98,                  #  pulmonary shunts -> capilares
     "Vt": 37.35 / 1000,             # Volume tecidos musculares/nao musc/capilares tec
@@ -67,8 +67,6 @@ cts_tg = {
         "RR": 12,                               # breaths/min eupneia (normal)
     # Aumentado
         # "Q_O2_Alb": ((2.88/1000)/60) * 0.5,         # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
-        # "Q_b": (25.6/60)/1000,                      # AUMENTADO SENOIDAL 25.6 L/min - 5.6/1000 m3 (Corrida)
-        # "RR": 20,                                   # breaths/min
 }
 
 cts_int = {
@@ -76,12 +74,16 @@ cts_int = {
     "RR": 12,
     "T": 5,
     "IEratio": 0.6,
-    "Pmus_min": -5,
+    "Pmus_min": -5, # -5,-14.49
     
     "Q_b_repouso": (5.6 / 60) / 1000,
     "Q_b_corrida": (25.6 / 60) / 1000,
     "RR_repouso": 12,
     "RR_corrida": 20,
+    "D_O2_repouso": 2.555227969833428e-05,
+    "D_CO2_repouso": 8.78457682709007e-07,
+    "D_O2_corrida": 2.555227969833428e-05*10, # fig 6 - hammond e hempleman (* 2.4)
+    "D_CO2_corrida": 8.78457682709007e-07*10, #
     
 }
 
@@ -89,7 +91,7 @@ cts_int = {
 
 # testes (condições iniciais: RR, Q_O2_Alb, nmols inicial)
 ## 1 - condições iniciais: RR e nmols em repouso com consumo em repouso (verificar o regime permanente) - simular comportamento das pressões parciais ao repouso
-## 2 - condições iniciais: RR e nmols em repouso com consumo aumentado (verificar o regime transiente) - simular adequação das pressões parciais ao consumo aumentado (ex.: exercício repentino) 
+## 2 - condições iniciais: RR e nmols em repouso em rp com consumo aumentado (verificar o regime transiente) - simular adequação das pressões parciais ao consumo aumentado (ex.: exercício repentino) 
 ## 3 - condições iniciais: RR e nmols aumentado com consumo aumentado (verificar o regime permanente) - simular comportamento das pressões parciais ao consumo aumentado (ex.: exercício contínuo) 
 ## 4 - condições iniciais: RR e nmols aumentado com consumo em repouso (verificar o regime transiente) - simular adequação das pressões parciais ao repouso (ex.: exercício interrompido) 
 

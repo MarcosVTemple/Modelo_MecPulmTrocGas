@@ -1,6 +1,7 @@
 {
-    "save_figures": "false",
-    "save_data": "false",
+    "save_figures": "FALSE",
+    "save_data": "FALSE",
     "modo_ventilacao": "normal",
-    "tempo_simulacao": "10"
+    "modo_atividade": "repouso",
+    "tempo_simulacao": "50"
 }
