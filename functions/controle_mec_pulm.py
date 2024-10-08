@@ -25,14 +25,16 @@ def controle_mp(t: float, RR: float, IEratio: float, dt: float, P_cap_O2: float,
     if inicio_do_ciclo_boolean and t > 0:
         tinicioT = tinicioT + T
     
-        incremento_rr = 1
+        incremento_rr = cts_int["incremento_rr"]
         if P_cap_CO2 > 40 or P_cap_O2 < 70:
-             if RR <= 21.1:
+             if RR <= 20:
                 RR += incremento_rr
+                RR = 20 if RR > 20 else RR
                 Pmus_min, Q_b = get_params_controle_calc(RR)
         else:
             if RR >= 12.5: 
                 RR -= incremento_rr
+                RR = 20 if RR > 20 else RR
                 Pmus_min, Q_b = get_params_controle_calc(RR)           
         
         Q_b_litro_minuto = cts_tg["Q_b"]*1000*60
@@ -80,16 +82,36 @@ def get_params_controle_calc(RR: float) -> Tuple[float,float]:
     Chi^2 = 0,0765306122448936
     R^2 = 0,999900738505519
     ---------------------------------------------------------------------------------------
-    f(RR) = RR*Pmus_min
-    
-    Q_b_medio = ((Q_b_corrida - Q_b_repouso)*(f(RR_medio) - f(RR_repouso)) / (f(RR_corrida) - f(RR_repouso)) ) + Q_b_repouso
-                
-    """
     a0  = 56.83163265
     a1  = -7.50340136
     a2  = 0.19557823
     
     Pmus_min = a0 + a1*RR + a2*(RR**2)
+    ---------------------------------------------------------------------------------------
+    f(RR) = RR*Pmus_min
+    
+    Q_b_medio = ((Q_b_corrida - Q_b_repouso)*(f(RR_medio) - f(RR_repouso)) / (f(RR_corrida) - f(RR_repouso)) ) + Q_b_repouso
+                
+                
+    Polynomial fit of dataset: Table1_Pmus,min, using function: a0+a1*x+a2*x^2+a3*x^3
+    Y standard errors: Unknown
+    From x = 12 to x = 20
+    a0  = 66,9970845481036 +/- 33,5104090301204
+    a1  = -9,4633138969871 +/- 6,42779745400859
+    a2  = 0,319120505344979 +/- 0,403904970097482
+    a3  = -0,00255102040816296 +/- 0,00833159776456843
+    --------------------------------------------------------------------------------------
+    Chi^2 = 0,0699708454810464
+    R^2 = 0,999909246633617
+    ---------------------------------------------------------------------------------------            
+    
+    """
+    a0  = 66.9970
+    a1  = -9.4633
+    a2  = 0.3191
+    a3  = -0.0025
+    
+    Pmus_min = a0 + a1*RR + a2*(RR**2)+ a3*(RR**3)
     
     
     Q_b_repouso = cts_int["Q_b_repouso"]

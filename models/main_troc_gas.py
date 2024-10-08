@@ -5,7 +5,7 @@ import math as m
 import time as t
 import os
 
-from parametros import cts_mp, cts_tg
+from parametros import cts_mp, cts_tg, cts_int
 
 from functions.entrada_troc_gas import entrada_tg
 from functions.derivada_troc_gas import derivada_tg
@@ -14,7 +14,7 @@ from functions.plot_troc_gas import plot_tg
 
 from decorators.timefunc import timefunc
 
-RR = cts_tg["RR"]
+RR = cts_int["RR"]
 dt = cts_tg["dt"]
 f = RR / 60
 

@@ -33,11 +33,6 @@ Ccw = cts_mp["Ccw"]
 Cb = cts_mp["Cb"]
 CA = cts_mp["CA"]
 
-Rtb = cts_mp["Rtb"]
-Rlt = cts_mp["Rlt"]
-Rml = cts_mp["Rml"]
-RbA = cts_mp["RbA"]
-
 Vul = cts_mp["Vul"]
 Vut = cts_mp["Vut"]
 Vub = cts_mp["Vub"]
@@ -51,7 +46,15 @@ Pvent = None
 
 
 class Integracao:
-    def __init__(self):
+    def __init__(self, **kwargs):
+        self.resistencia_alveolar = None
+        self.fator_difusao = None
+        
+        if kwargs.get("resistencia_alveolar", "") != "":
+            self.resistencia_alveolar = kwargs.get("resistencia_alveolar", "")
+        if kwargs.get("fator_difusao", "") != "":
+            self.fator_difusao = kwargs.get("fator_difusao", "")
+        
         tempo_simulacao = os.getenv("tempo_simulacao", default=None)
         if tempo_simulacao:
             cts_int["N"] = int(int(tempo_simulacao)/cts_int["dt"])
@@ -147,15 +150,15 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        self.x_tg.iloc[0, 0] = 12.73 #recupe 16.16# aumentado 11.94 # 12.73 repouso
-        self.x_tg.iloc[0, 1] = 0.35 #recupe  0.73# aumentado 0.36 # 0.35 repouso
-        self.x_tg.iloc[0, 2] = 58.23 #recupe  99.02# aumentado 58.34 # 58.23 repouso
+        self.x_tg.iloc[0, 0] = 11.94
+        self.x_tg.iloc[0, 1] = 0.36
+        self.x_tg.iloc[0, 2] = 58.34
 
-        self.x_tg.iloc[0, 3] = 0.65#recupe   1.00# aumentado 0.68 # 0.65 repouso
-        self.x_tg.iloc[0, 4] = 0.25#recupe   0.49# aumentado 0.26 # 0.25 repouso
+        self.x_tg.iloc[0, 3] = 0.68
+        self.x_tg.iloc[0, 4] = 0.26
 
-        self.x_tg.iloc[0, 5] =  188.87 #recupe  241.00# aumentado 198.75 # 188.87 repouso
-        self.x_tg.iloc[0, 6] =  98.13 #recupe  189.56# aumentado 101.48 # 98.13 repouso
+        self.x_tg.iloc[0, 5] = 198.75 
+        self.x_tg.iloc[0, 6] = 101.48
         
         # int
         cts_int["Pmusmin"], cts_tg["Q_b"] = get_params_controle_calc(RR=RR)
@@ -169,23 +172,27 @@ class Integracao:
         self.inicializa_var_estado()
         self.rungekutta4()
         
+        result_folder = "int"
+        if os.getenv("modo_ventilacao", default="") == 'dpoc':
+            result_folder = "dpoc"
+        
         # mp
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
-            self.x_mp.to_csv(f"temp/int/data/mecanica_pulmonar_variaveis_estado_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
-            self.u_mp.to_csv(f"temp/int/data/mecanica_pulmonar_entradas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
-            self.y_mp.to_csv(f"temp/int/data/mecanica_pulmonar_saidas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
+            self.x_mp.to_csv(f"temp/{result_folder}/data/mecanica_pulmonar_variaveis_estado_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
+            self.u_mp.to_csv(f"temp/{result_folder}/data/mecanica_pulmonar_entradas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
+            self.y_mp.to_csv(f"temp/{result_folder}/data/mecanica_pulmonar_saidas_dt_{dt}_{cts_int['N']}_{timestamp}.csv", sep=";", index=False)
         
         # tg
         if os.getenv("save_data", default="") == 'TRUE':
             timestamp = str(int(round(t.time() * 1000)))
             self.x_tg.to_csv(
-                f"temp/int/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/{result_folder}/data/troca_gases_variaveis_estado_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
             self.y_tg.to_csv(
-                f"temp/int/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
+                f"temp/{result_folder}/data/troca_gases_saidas_dt_{dt}_{cts_tg['modo_ventilacao']}_{timestamp}.csv",
                 sep=";",
                 index=False
             )
@@ -198,6 +205,15 @@ class Integracao:
         tciclo_anterior = 0
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
         P_cap_CO2 = self.y_tg.loc[0, "P_cap_CO2"]
+        
+        Rtb, Rlt, Rml, RbA = cts_mp["Rtb"], cts_mp["Rlt"], cts_mp["Rml"], cts_mp["RbA"]
+        
+        if self.resistencia_alveolar:
+            RbA *= self.resistencia_alveolar
+            
+        if self.fator_difusao:
+            cts_tg['D_O2'] = cts_tg['D_O2']*self.fator_difusao
+            cts_tg['D_CO2'] = cts_tg['D_CO2']*self.fator_difusao
         
         tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
                 = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo_anterior)
