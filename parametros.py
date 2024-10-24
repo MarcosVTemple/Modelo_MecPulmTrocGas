@@ -57,19 +57,22 @@ cts_tg = {
     "modo_ventilacao": "normal", #  "apneia",
     # Repouso
         "Q_O2_Alb": ((0.2 / 1000) / 60),        # proporção do consumo do gás O2 [m3/s] 200-300 ml/min
-        # "Q_b": (5.6 / 60) / 1000,               # 5.6 L/min - 5.6/1000 m3
+        "Q_b": (5.6 / 60) / 1000,               # 5.6 L/min - 5.6/1000 m3
     # Aumentado
-        "Q_O2_Alb": ((2.88/1000)/60),         # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
+        # "Q_O2_Alb": ((2.88/1000)/60),         # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
         # "Q_b": (5.6 / 60) / 1000,             # inicialmente 5.6 L/min - 5.6/1000 m3
+    # Recuperacao
+        # "Q_O2_Alb": ((0.2/1000)/60),
+        # "Q_b": (25.6 / 60) / 1000,
 }
 
 cts_int = {
     # variaveis por simulacao
     "RR": 12,
-    "Pmus_min": -5, #-13.49, # -5,-14.49
-    "incremento_rr": 1, # normal 1, dpoc ?
+    "Pmus_min": -5, # -5,-14.629
     
     # fixos
+    "incremento_rr": 1,
     "dt": 0.0004,
     "T": 5,
     "IEratio": 0.6,

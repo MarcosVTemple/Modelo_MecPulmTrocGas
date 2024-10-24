@@ -150,18 +150,16 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        self.x_tg.iloc[0, 0] = 11.94
-        self.x_tg.iloc[0, 1] = 0.36
-        self.x_tg.iloc[0, 2] = 58.34
+        self.x_tg.iloc[0, 0] = 12.18428
+        self.x_tg.iloc[0, 1] = 0.362807
+        self.x_tg.iloc[0, 2] = 58.641264
 
-        self.x_tg.iloc[0, 3] = 0.68
-        self.x_tg.iloc[0, 4] = 0.26
+        self.x_tg.iloc[0, 3] = 0.742159
+        self.x_tg.iloc[0, 4] = 0.302085
 
-        self.x_tg.iloc[0, 5] = 198.75 
-        self.x_tg.iloc[0, 6] = 101.48
+        self.x_tg.iloc[0, 5] = 231.099895
+        self.x_tg.iloc[0, 6] = 114.457866
         
-        # int
-        cts_int["Pmusmin"], cts_tg["Q_b"] = get_params_controle_calc(RR=RR)
         
         
     def plot_integracao(self):
@@ -196,6 +194,7 @@ class Integracao:
                 sep=";",
                 index=False
             )
+        print(f"Valores finais de nmols:\n{self.x_tg.tail(1)}")
         
             
     def rungekutta4(self):
@@ -217,7 +216,7 @@ class Integracao:
         
         tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
                 = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo_anterior)
-                
+        
         
         for i in tqdm(range(cts_int["N"]-1)):
             ### MECANICA PULMONAR

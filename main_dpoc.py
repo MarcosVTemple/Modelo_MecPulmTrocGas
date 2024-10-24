@@ -14,27 +14,40 @@ if __name__ == "__main__":
             os.environ["modo_ventilacao"] = input_dict["modo_ventilacao"]
             os.environ["modo_atividade"] = input_dict["modo_atividade"]
         
-        print("Iniciando sistema integrado")
-        int_obj = Integracao(resistencia_alveolar=40, fator_difusao=0.9)
-        int_obj.run_integracao()
-        int_obj.plot_integracao()
-        
-        
-        
-        # int_resistencia_obj = Integracao(resistencia_alveolar=40)
-        # int_resistencia_obj.run_integracao()
-        
-        # int_difusao_obj = Integracao(fator_difusao=0.9)
-        # int_difusao_obj.run_integracao()
-        
-        # int_ambos_obj = Integracao(resistencia_alveolar=40, fator_difusao=0.9)
-        # int_ambos_obj.run_integracao()
-        
-        # int_obj = Integracao()
+        # print("Iniciando sistema integrado")
+        # int_obj = Integracao(resistencia_alveolar=40, fator_difusao=0.9)
         # int_obj.run_integracao()
+        # int_obj.plot_integracao()
         
-        # _plot(int_resistencia_obj, int_difusao_obj, int_ambos_obj, int_obj)
-        # plot_dpoc_unico(int_ambos_obj, label="ambos")
+        
+        resistencia_alveolar = 40
+        fator_difusao = 0.9
+        
+        print("Simulação com aumento de RbA")
+        int_resistencia_obj = Integracao(resistencia_alveolar=resistencia_alveolar)
+        int_resistencia_obj.run_integracao()
+        
+        print("Simulação com redução de difusão")
+        int_difusao_obj = Integracao(fator_difusao=fator_difusao)
+        int_difusao_obj.run_integracao()
+        
+        print("Simulação com ambos")
+        int_ambos_obj = Integracao(resistencia_alveolar=resistencia_alveolar, fator_difusao=fator_difusao)
+        int_ambos_obj.run_integracao()
+        
+        print("Simulação sem modificacoes")
+        int_obj = Integracao()
+        int_obj.run_integracao()
+        
+        _plot(
+            object_ra=int_resistencia_obj, 
+            object_dif=int_difusao_obj, 
+            object_both=int_ambos_obj, 
+            object_normal=int_obj
+        )
+        
+        # plot_dpoc_unico(int_obj, label="difusao")
+        
         # int_ambos_obj.x_tg.to_csv(
         #         "temp/dpoc/dpoc_troca_gases_variaveis_estado_dt.csv",
         #         sep=";",
