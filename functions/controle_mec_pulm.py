@@ -1,3 +1,4 @@
+import os 
 from typing import Tuple
 from parametros import cts_int, cts_tg
 
@@ -10,6 +11,8 @@ def controle_mp(t: float, RR: float, IEratio: float, dt: float, P_cap_O2: float,
     :param IEratio: razãao entre o tempo de inspiracao e expiracao
     :return: tciclo, T, Te, Ti
     """
+    modo_atividade = os.getenv("modo_atividade")
+    modo_ventilacao = os.getenv("modo_ventilacao")
     Q_b = None
     T = 60 / RR
     Te = (60 / RR) / (1 + IEratio)
@@ -26,18 +29,18 @@ def controle_mp(t: float, RR: float, IEratio: float, dt: float, P_cap_O2: float,
         tinicioT = tinicioT + T
     
         incremento_rr = cts_int["incremento_rr"]
-        if P_cap_CO2 > 40 or P_cap_O2 < 70:
+        if P_cap_CO2 > 42 or P_cap_O2 < 70:
              if RR <= 20:
                 RR += incremento_rr
                 RR = 20 if RR > 20 else RR
-                Pmus_min, Q_b = get_params_controle_calc(RR)
+                Pmus_min, Q_b = get_params_controle_calc(RR, modo_atividade, modo_ventilacao)
         else:
             if RR >= 12.5: 
                 RR -= incremento_rr
                 RR = 20 if RR > 20 else RR
-                Pmus_min, Q_b = get_params_controle_calc(RR)           
+                Pmus_min, Q_b = get_params_controle_calc(RR, modo_atividade, modo_ventilacao)
         
-        Q_b_litro_minuto = cts_tg["Q_b"]*1000*60
+        Q_b_litro_minuto = cts_tg[modo_atividade]["Q_b"]*1000*60
         
         print(f"Pressoes O2 e CO2: {P_cap_O2}, {P_cap_CO2}")
         print(f"Novo Pmus_min: {Pmus_min}")
@@ -70,7 +73,7 @@ RR and the amplitude of the respiratory muscle pressure generator, Pmus,min
 """
 
 
-def get_params_controle_calc(RR: float) -> Tuple[float,float]:
+def get_params_controle_calc(RR: float, modo_atividade: str, modo_ventilacao: str) -> Tuple[float,float]:
     """
     Polynomial fit of dataset: Table1_Pmus,min, using function: a0+a1*x+a2*x^2
     Y standard errors: Unknown
@@ -123,12 +126,15 @@ def get_params_controle_calc(RR: float) -> Tuple[float,float]:
     f_medio = RR*Pmus_min
     
     Q_b = ((Q_b_corrida - Q_b_repouso)*(f_medio - f_repouso) / (f_corrida - f_repouso) ) + Q_b_repouso
-    cts_tg["Q_b"] = Q_b
+    cts_tg[modo_atividade]["Q_b"] = Q_b
        
-    D_O2_repouso = cts_int["D_O2_repouso"]
-    D_O2_corrida = cts_int["D_O2_corrida"]
-    D_CO2_repouso = cts_int["D_CO2_repouso"]
-    D_CO2_corrida = cts_int["D_CO2_corrida"]
+       
+    fator_difusao = 0.9 if modo_ventilacao == 'dpoc' else 1
+        
+    D_O2_repouso = cts_int["D_O2_repouso"]*fator_difusao
+    D_O2_corrida = cts_int["D_O2_corrida"]*fator_difusao
+    D_CO2_repouso = cts_int["D_CO2_repouso"]*fator_difusao
+    D_CO2_corrida = cts_int["D_CO2_corrida"]*fator_difusao
        
     D_O2 = ((D_O2_corrida - D_O2_repouso)*(Q_b - Q_b_repouso) / (Q_b_corrida - Q_b_repouso) ) + D_O2_repouso
     cts_tg["D_O2"] = D_O2

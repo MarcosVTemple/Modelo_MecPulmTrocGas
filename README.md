@@ -43,16 +43,6 @@
     "RR": 12,
     "Pmus_min": -5,
 
-    resultados
-    - rr: 20 (ativou em 25s e chegou ao máx em 118s)
-    - Q_b: 25.6
-    - pmusmin: -14.629
-
-    - Vcorrente: 1,5 L
-    - VD: 140-240mL
-    - QA: aumentou aprox 4.5x (Máx em 1.55).
-    - valores finais PcapO2: 45-63 mmHg; PcapCO2: 35-45 mmHg 
-
     resultados limite 42
     - rr: 20 (iniciou em 40 e max em 134)
     - Q_b: 25.6
@@ -78,16 +68,6 @@
     "Q_b": (25.6 / 60) / 1000, # obter dos resultados
     "RR": 20, # obter dos resultados
     "Pmus_min": -14.629, # obter dos resultados
-
-    resultados limite 40
-    - rr: 14
-    - Q_b: 10.6
-    - pmusmin: -9.8
-
-    - Vcorrente: 1 L
-    - VD: 140-240mL
-    - QA: 0.8.
-    - valores finais PcapO2: 78-87 mmHg; PcapCO2: 35-39 mmHg 
 
     resultados limite 42
     - rr: 13
@@ -178,8 +158,8 @@
 
     - Vcorrente: 0.42 L
     - VD: 140-180mL
-    - QA: normal.
-    - valores finais PcapO2: 89-91 mmHg; PcapCO2: 39-40 mmHg 
+    - QA: 0.27.
+    - valores finais PcapO2: 88-91 mmHg; PcapCO2: 39-40 mmHg 
 
  
 ## Resultados
@@ -212,3 +192,20 @@
 - VD: 140-184mL
 - QA: 1.1 para 0.277 L/s se manteve.
 - valores finais PcapO2: 88-91 mmHg; PcapCO2: 38-39 mmHg
+
+# Como executar o modelo integrado:
+Alterar o arquivo input.json e executar main.py.
+## input.json, escolhas possiveis:
+- save_figures: TRUE/FALSE
+- save_data: TRUE/FALSE
+- modo_ventilacao: normal/dpoc
+- modo_atividade: repouso/exercicio/recuperacao
+- tempo_simulacao: 1-1000 [segundos]
+# 
+    {
+        "save_figures": "FALSE",
+        "save_data": "FALSE",
+        "modo_ventilacao": "normal",
+        "modo_atividade": "repouso",
+        "tempo_simulacao": "100"
+    }

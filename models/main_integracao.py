@@ -22,7 +22,6 @@ from functions.plot_mec_pulm import plot_mp
 
 from decorators.timefunc import timefunc
 
-RR = cts_int["RR"]
 dt = cts_int["dt"]
 T = cts_int["T"]
 IEratio = cts_int["IEratio"]
@@ -47,6 +46,9 @@ Pvent = None
 
 class Integracao:
     def __init__(self, **kwargs):
+        self.modo_ventilacao = os.getenv("modo_ventilacao")
+        self.modo_atividade = os.getenv("modo_atividade")
+        
         self.resistencia_alveolar = None
         self.fator_difusao = None
         
@@ -129,7 +131,7 @@ class Integracao:
         )
         self.y_int = pd.DataFrame(
             {
-                'RR': np.zeros(cts_int["N"],    dtype=float),
+                'RR': np.zeros(cts_int["N"], dtype=float),
                 'Pmus_min': np.zeros(cts_int["N"], dtype=float),
                 'Q_b': np.zeros(cts_int["N"], dtype=float),
             }
@@ -150,15 +152,15 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        self.x_tg.iloc[0, 0] = 12.18428
-        self.x_tg.iloc[0, 1] = 0.362807
-        self.x_tg.iloc[0, 2] = 58.641264
+        self.x_tg.iloc[0, 0] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_O2"]
+        self.x_tg.iloc[0, 1] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_CO2"]
+        self.x_tg.iloc[0, 2] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_N2"]
 
-        self.x_tg.iloc[0, 3] = 0.742159
-        self.x_tg.iloc[0, 4] = 0.302085
+        self.x_tg.iloc[0, 3] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_O2"]
+        self.x_tg.iloc[0, 4] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_CO2"]
 
-        self.x_tg.iloc[0, 5] = 231.099895
-        self.x_tg.iloc[0, 6] = 114.457866
+        self.x_tg.iloc[0, 5] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_O2"]
+        self.x_tg.iloc[0, 6] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_CO2"]
         
         
         
@@ -198,8 +200,8 @@ class Integracao:
         
             
     def rungekutta4(self):
-        RR = cts_int["RR"]
-        Pmus_min = cts_int["Pmus_min"]
+        RR = cts_int[self.modo_atividade]["RR"]
+        Pmus_min = cts_int[self.modo_atividade]["Pmus_min"]
         tinicioT = 0
         tciclo_anterior = 0
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
@@ -280,7 +282,7 @@ class Integracao:
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
             
             ### CONTROLE
-            Q_b = cts_tg["Q_b"]*1000*60
+            Q_b = cts_tg[self.modo_atividade]["Q_b"]*1000*60
             self.y_int.iloc[i + 1, :] = np.array([RR_dt, Pmus_min_dt, Q_b])
             tciclo_anterior = tciclo
             
