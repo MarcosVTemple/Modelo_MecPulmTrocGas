@@ -5,7 +5,7 @@ import math as m
 import time as t
 import os
 
-from parametros import cts_mp, cts_tg, cts_int
+from parametros import cts_mp, cts_tg, cts_int, cts_comparacoes
 from functions.plot_integracao import plot_int
 from functions.controle_mec_pulm import controle_mp, get_params_controle_calc
 
@@ -22,7 +22,6 @@ from functions.plot_mec_pulm import plot_mp
 
 from decorators.timefunc import timefunc
 
-RR = cts_int["RR"]
 dt = cts_int["dt"]
 T = cts_int["T"]
 IEratio = cts_int["IEratio"]
@@ -47,8 +46,16 @@ Pvent = None
 
 class Integracao:
     def __init__(self, **kwargs):
+        self.modo_ventilacao = os.getenv("modo_ventilacao")
+        self.modo_atividade = os.getenv("modo_atividade")
+        
+        
         self.resistencia_alveolar = None
         self.fator_difusao = None
+        self.tipo_comparacao = None
+        
+        if kwargs.get("comparacoes", "") != "":
+            self.tipo_comparacao = kwargs.get("comparacoes", "")
         
         if kwargs.get("resistencia_alveolar", "") != "":
             self.resistencia_alveolar = kwargs.get("resistencia_alveolar", "")
@@ -129,7 +136,7 @@ class Integracao:
         )
         self.y_int = pd.DataFrame(
             {
-                'RR': np.zeros(cts_int["N"],    dtype=float),
+                'RR': np.zeros(cts_int["N"], dtype=float),
                 'Pmus_min': np.zeros(cts_int["N"], dtype=float),
                 'Q_b': np.zeros(cts_int["N"], dtype=float),
             }
@@ -150,18 +157,27 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        self.x_tg.iloc[0, 0] = 11.94
-        self.x_tg.iloc[0, 1] = 0.36
-        self.x_tg.iloc[0, 2] = 58.34
+        if self.tipo_comparacao:
+            self.x_tg.iloc[0, 0] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_O2"]
+            self.x_tg.iloc[0, 1] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_CO2"]
+            self.x_tg.iloc[0, 2] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_N2"]
 
-        self.x_tg.iloc[0, 3] = 0.68
-        self.x_tg.iloc[0, 4] = 0.26
+            self.x_tg.iloc[0, 3] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_cap_O2"]
+            self.x_tg.iloc[0, 4] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_cap_CO2"]
 
-        self.x_tg.iloc[0, 5] = 198.75 
-        self.x_tg.iloc[0, 6] = 101.48
+            self.x_tg.iloc[0, 5] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_t_O2"]
+            self.x_tg.iloc[0, 6] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_t_CO2"]
+        else:
+            self.x_tg.iloc[0, 0] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_O2"]
+            self.x_tg.iloc[0, 1] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_CO2"]
+            self.x_tg.iloc[0, 2] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_N2"]
+
+            self.x_tg.iloc[0, 3] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_O2"]
+            self.x_tg.iloc[0, 4] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_CO2"]
+
+            self.x_tg.iloc[0, 5] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_O2"]
+            self.x_tg.iloc[0, 6] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_CO2"]
         
-        # int
-        cts_int["Pmusmin"], cts_tg["Q_b"] = get_params_controle_calc(RR=RR)
         
         
     def plot_integracao(self):
@@ -196,11 +212,12 @@ class Integracao:
                 sep=";",
                 index=False
             )
+        print(f"Valores finais de nmols:\n{self.x_tg.tail(1)}")
         
             
     def rungekutta4(self):
-        RR = cts_int["RR"]
-        Pmus_min = cts_int["Pmus_min"]
+        RR = cts_int[self.modo_atividade]["RR"]
+        Pmus_min = cts_int[self.modo_atividade]["Pmus_min"]
         tinicioT = 0
         tciclo_anterior = 0
         P_cap_O2 = self.y_tg.loc[0, "P_cap_O2"]
@@ -217,7 +234,7 @@ class Integracao:
         
         tciclo, T, Te, Ti, RR, Pmus_min, tinicioT \
                 = controle_mp(0, RR, IEratio, dt, P_cap_O2, P_cap_CO2, Pmus_min, tinicioT, tciclo_anterior)
-                
+        
         
         for i in tqdm(range(cts_int["N"]-1)):
             ### MECANICA PULMONAR
@@ -281,7 +298,7 @@ class Integracao:
             self.y_tg.iloc[i + 1, :] = saida_tg(x_tg_rk2, cts_tg)
             
             ### CONTROLE
-            Q_b = cts_tg["Q_b"]*1000*60
+            Q_b = cts_tg[self.modo_atividade]["Q_b"]*1000*60
             self.y_int.iloc[i + 1, :] = np.array([RR_dt, Pmus_min_dt, Q_b])
             tciclo_anterior = tciclo
             

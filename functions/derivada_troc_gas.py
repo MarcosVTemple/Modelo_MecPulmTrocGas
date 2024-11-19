@@ -1,19 +1,19 @@
+import os
 import numpy as np
 
 
 def derivada_tg(x, u, cts_tg):
+    modo_atividade = os.getenv("modo_atividade")
     n_A_O2, n_A_CO2, n_A_N, n_cap_O2, n_cap_CO2, n_t_O2, n_t_CO2 = x
 
-    R, T, Patm, f_O2, f_CO2, f_N, D_O2, D_CO2, Q_b, Q_b, sigma, \
-    Vt, Vcap, c_t_O2_fis, Q_O2 = get_constants(cts_tg)
+    R, T, Patm, f_O2, f_CO2, f_N, D_O2, D_CO2, Q_b, sigma, \
+    Vt, Vcap, c_t_O2_fis, Q_O2 = get_constants(cts_tg, modo_atividade)
 
 
     nT = n_A_O2 + n_A_CO2 + n_A_N  # numero de mmols total no alveolo
 
     nT_t = ((-n_t_O2 - n_t_CO2) * (nT / n_A_N)) / (1 - (nT / n_A_N)) # numero de mmols total nos tecidos
 
-    if cts_tg["modo_ventilacao"] == "apneia":
-        u = 0
 
     # derivada alveolar
     if u >= 0:
@@ -47,7 +47,7 @@ def derivada_tg(x, u, cts_tg):
     return dx
 
 
-def get_constants(cts_tg):
+def get_constants(cts_tg, modo_atividade):
     R = cts_tg["R"]
     T = cts_tg["Temp"]
     VA_t = cts_tg["VA_t"]
@@ -57,12 +57,12 @@ def get_constants(cts_tg):
     f_N = cts_tg["f_N2_H2O"]
     D_O2 = cts_tg["D_O2"]
     D_CO2 = cts_tg["D_CO2"]
-    Q_b = cts_tg["Q_b"]
+    Q_b = cts_tg[modo_atividade]["Q_b"]
     sigma = cts_tg["sigma"]
     Vt = cts_tg["Vt"]
     Vcap = cts_tg["Vcap"]
     c_t_O2_fis = cts_tg["c_t_O2_fis"]
-    Q_O2_Alb = cts_tg["Q_O2_Alb"]
+    Q_O2_Alb = cts_tg[modo_atividade]["Q_O2_Alb"]
     
     # calculado com base nos valores iniciais de n para os 3 compartimentos e derivada zero
     # D_O2 = 0.00010646783207639284 
@@ -73,5 +73,5 @@ def get_constants(cts_tg):
    
     Q_O2 = (Q_O2_Alb * (Patm / (R * T))) * 1000
 
-    return R, T, Patm, f_O2, f_CO2, f_N, D_O2, D_CO2, Q_b, Q_b, sigma, Vt, Vcap, \
+    return R, T, Patm, f_O2, f_CO2, f_N, D_O2, D_CO2, Q_b, sigma, Vt, Vcap, \
            c_t_O2_fis, Q_O2

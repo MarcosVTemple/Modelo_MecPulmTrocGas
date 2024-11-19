@@ -54,22 +54,107 @@ cts_tg = {
     "c_t_CO2_fis": 4610.1,          # n_t_CO2/Vt [mmol/m3] 
 
     # DEFINIR VENTILACAO E PARAMS
-    "modo_ventilacao": "normal", #  "apneia",
+    # "modo_ventilacao": "normal", #  "apneia",
     # Repouso
-        "Q_O2_Alb": ((0.2 / 1000) / 60),        # proporção do consumo do gás O2 [m3/s] 200-300 ml/min
+        # "Q_O2_Alb": ((0.2 / 1000) / 60),        # proporção do consumo do gás O2 [m3/s] 200-300 ml/min
         # "Q_b": (5.6 / 60) / 1000,               # 5.6 L/min - 5.6/1000 m3
     # Aumentado
-        "Q_O2_Alb": ((2.88/1000)/60),         # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
+        # "Q_O2_Alb": ((2.88/1000)/60),         # AUMENTADO: proporção do consumo do gás O2 [m3/s] 2880 ml/min
         # "Q_b": (5.6 / 60) / 1000,             # inicialmente 5.6 L/min - 5.6/1000 m3
+    # Recuperacao
+        # "Q_O2_Alb": ((0.2/1000)/60),
+        # "Q_b": (25.6 / 60) / 1000,
+        
+    # novo
+    "repouso": {
+        "Q_O2_Alb": ((0.2 / 1000) / 60),
+        "Q_b": (5.6 / 60) / 1000,
+        "normal": {
+            "nmols_inicial_A_O2": 11.94,
+            "nmols_inicial_A_CO2": 0.36,
+            "nmols_inicial_A_N2": 58.34,
+            "nmols_inicial_cap_O2": 0.68,
+            "nmols_inicial_cap_CO2": 0.26,
+            "nmols_inicial_t_O2": 198.75 ,
+            "nmols_inicial_t_CO2": 101.48,
+        },
+        "dpoc": {
+            "nmols_inicial_A_O2": 12.339234,
+            "nmols_inicial_A_CO2": 0.362266,
+            "nmols_inicial_A_N2": 58.836508,
+            "nmols_inicial_cap_O2": 0.712674 ,
+            "nmols_inicial_cap_CO2": 0.285165,
+            "nmols_inicial_t_O2": 213.698278,
+            "nmols_inicial_t_CO2": 108.356058,            
+        }
+    },    
+    "exercicio": {
+        "Q_O2_Alb": ((2.88 / 1000) / 60),
+        "Q_b": (5.6 / 60) / 1000,
+        "normal": {
+            "nmols_inicial_A_O2": 11.98536,
+            "nmols_inicial_A_CO2": 0.366351,
+            "nmols_inicial_A_N2": 58.446508,
+            "nmols_inicial_cap_O2": 0.7098,
+            "nmols_inicial_cap_CO2": 0.275655,
+            "nmols_inicial_t_O2": 208.18697,
+            "nmols_inicial_t_CO2": 104.956376,
+        },
+        "dpoc": {
+            "nmols_inicial_A_O2": 12.339234,
+            "nmols_inicial_A_CO2": 0.362266,
+            "nmols_inicial_A_N2": 58.836508,
+            "nmols_inicial_cap_O2": 0.712674 ,
+            "nmols_inicial_cap_CO2": 0.285165,
+            "nmols_inicial_t_O2": 213.698278,
+            "nmols_inicial_t_CO2": 108.356058, 
+        }
+    },    
+    "recuperacao": {
+        "Q_O2_Alb": ((0.2/1000)/60),
+        "Q_b": (25.6 / 60) / 1000,  # obtido dos resultados do exercicio
+        "normal": {
+            "nmols_inicial_A_O2": 10.960723,
+            "nmols_inicial_A_CO2": 0.590381,
+            "nmols_inicial_A_N2": 76.68942,
+            "nmols_inicial_cap_O2": 1.119221,
+            "nmols_inicial_cap_CO2": 0.798921,
+            "nmols_inicial_t_O2": 267.249815,
+            "nmols_inicial_t_CO2": 303.791726,
+        },
+        "dpoc": {
+            "nmols_inicial_A_O2": 7.18276,
+            "nmols_inicial_A_CO2": 0.55175,
+            "nmols_inicial_A_N2": 65.497885,
+            "nmols_inicial_cap_O2": 0.952438,
+            "nmols_inicial_cap_CO2": 0.784887,
+            "nmols_inicial_t_O2": 246.832904,
+            "nmols_inicial_t_CO2": 297.079979,
+        }
+    },    
+    
 }
 
 cts_int = {
     # variaveis por simulacao
-    "RR": 12,
-    "Pmus_min": -5, #-13.49, # -5,-14.49
-    "incremento_rr": 1, # normal 1, dpoc ?
+    # "RR": 12,
+    # "Pmus_min": -5, # -5,-14.629
+    
+    "repouso": {
+        "RR": 12,
+        "Pmus_min": -5,
+    },    
+    "exercicio": {
+        "RR": 12,
+        "Pmus_min": -5,
+    },    
+    "recuperacao": {
+        "RR": 20, # obtido dos resultados do exercicio
+        "Pmus_min": -14.629, # obtido dos resultados do exercicio
+    },
     
     # fixos
+    "incremento_rr": 1,
     "dt": 0.0004,
     "T": 5,
     "IEratio": 0.6,
@@ -82,6 +167,45 @@ cts_int = {
     "D_O2_corrida": 2.555227969833428e-05*10, # fig 6 - hammond e hempleman (* 2.4)
     "D_CO2_corrida": 8.78457682709007e-07*10, #
     
+}
+
+cts_comparacoes = {
+    "RbA": {
+        "nmols_inicial_A_O2": 11.762532198770069,
+        "nmols_inicial_A_CO2": 0.3774867052622496,
+        "nmols_inicial_A_N2": 59.016984938849895,
+        "nmols_inicial_cap_O2": 0.7945470653509566,
+        "nmols_inicial_cap_CO2": 0.3164659821499069,
+        "nmols_inicial_t_O2": 241.972005257604,
+        "nmols_inicial_t_CO2": 120.13106317728555
+    },
+    "difusao": {
+        "nmols_inicial_A_O2": 12.328931204465015,
+        "nmols_inicial_A_CO2": 0.36088571620646226,
+        "nmols_inicial_A_N2": 58.674247418389335,
+        "nmols_inicial_cap_O2": 0.7794393977327762,
+        "nmols_inicial_cap_CO2": 0.3161222926009255,
+        "nmols_inicial_t_O2": 238.93208752980905,
+        "nmols_inicial_t_CO2": 119.91230997376077
+    },
+    "ambos": {
+        "nmols_inicial_A_O2": 12.28865408093833,
+        "nmols_inicial_A_CO2": 0.3651829881743629,
+        "nmols_inicial_A_N2": 59.016984938849895,
+        "nmols_inicial_cap_O2": 0.7507503410994668,
+        "nmols_inicial_cap_CO2": 0.3154901497961505,
+        "nmols_inicial_t_O2": 233.14766908481135,
+        "nmols_inicial_t_CO2": 119.50496406072565
+    },
+    "normal": {
+        "nmols_inicial_A_O2": 12.56574695143209,
+        "nmols_inicial_A_CO2": 0.35531185147261185,
+        "nmols_inicial_A_N2": 58.674247418389335,
+        "nmols_inicial_cap_O2": 0.7570790540339919,
+        "nmols_inicial_cap_CO2": 0.315626433466763,
+        "nmols_inicial_t_O2": 234.4285047187533,
+        "nmols_inicial_t_CO2": 119.59347677070973
+    },
 }
 
 # alterar entrada de ar com as proporcoes do ar atm
