@@ -161,38 +161,6 @@
     - QA: 0.27.
     - valores finais PcapO2: 88-91 mmHg; PcapCO2: 39-40 mmHg 
 
- 
-## Resultados
-### simulacao atividade 300s dpoc valores finais
-- rr: 20 (ativou em 20s e chegou ao máx em 115s)
-- Q_b: 25.6
-- pmusmin: -14.629
-
-- Vcorrente: 1 L
-- VD: 140-260mL
-- QA: aumentou aprox 4x (Máx em 1.1).
-- valores finais PcapO2: 41-55 mmHg; PcapCO2: 33-41 mmHg 
-
-### simulacao recuperacao 300s dpoc valores finais
-- rr: 20 (nao reduziu devido ao O2 menor que 70 mmHg e CO2 menor que 40 fora dos picos)
-- Q_b: 25.6
-- pmusmin: -14.629
-
-- Vcorrente: 1 L
-- VD: 140-267mL
-- QA: se manteve.
-- valores finais PcapO2: 63-75 mmHg; PcapCO2: 29-34 mmHg
-
-### simulacao recuperacao 500s dpoc valores finais
-- rr: 12
-- Q_b: 5.6
-- pmusmin: -5
-
-- Vcorrente: 0.417 L
-- VD: 140-184mL
-- QA: 1.1 para 0.277 L/s se manteve.
-- valores finais PcapO2: 88-91 mmHg; PcapCO2: 38-39 mmHg
-
 # Como executar o modelo integrado:
 Alterar o arquivo input.json e executar main.py.
 ## input.json, escolhas possiveis:
