@@ -169,6 +169,45 @@ cts_int = {
     
 }
 
+cts_comparacoes = {
+    "RbA": {
+        "nmols_inicial_A_O2": 11.762532198770069,
+        "nmols_inicial_A_CO2": 0.3774867052622496,
+        "nmols_inicial_A_N2": 59.016984938849895,
+        "nmols_inicial_cap_O2": 0.7945470653509566,
+        "nmols_inicial_cap_CO2": 0.3164659821499069,
+        "nmols_inicial_t_O2": 241.972005257604,
+        "nmols_inicial_t_CO2": 120.13106317728555
+    },
+    "difusao": {
+        "nmols_inicial_A_O2": 12.328931204465015,
+        "nmols_inicial_A_CO2": 0.36088571620646226,
+        "nmols_inicial_A_N2": 58.674247418389335,
+        "nmols_inicial_cap_O2": 0.7794393977327762,
+        "nmols_inicial_cap_CO2": 0.3161222926009255,
+        "nmols_inicial_t_O2": 238.93208752980905,
+        "nmols_inicial_t_CO2": 119.91230997376077
+    },
+    "ambos": {
+        "nmols_inicial_A_O2": 12.28865408093833,
+        "nmols_inicial_A_CO2": 0.3651829881743629,
+        "nmols_inicial_A_N2": 59.016984938849895,
+        "nmols_inicial_cap_O2": 0.7507503410994668,
+        "nmols_inicial_cap_CO2": 0.3154901497961505,
+        "nmols_inicial_t_O2": 233.14766908481135,
+        "nmols_inicial_t_CO2": 119.50496406072565
+    },
+    "normal": {
+        "nmols_inicial_A_O2": 12.56574695143209,
+        "nmols_inicial_A_CO2": 0.35531185147261185,
+        "nmols_inicial_A_N2": 58.674247418389335,
+        "nmols_inicial_cap_O2": 0.7570790540339919,
+        "nmols_inicial_cap_CO2": 0.315626433466763,
+        "nmols_inicial_t_O2": 234.4285047187533,
+        "nmols_inicial_t_CO2": 119.59347677070973
+    },
+}
+
 # alterar entrada de ar com as proporcoes do ar atm
 
 # testes (condições iniciais: RR, Q_O2_Alb, nmols inicial)

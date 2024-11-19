@@ -78,7 +78,7 @@ def _plot(object_ra, object_dif, object_both, object_normal):
     plt.figure(4)
     # plt.title("Pressão parcial de oxigenio nos capilares")
     plt.xlabel("Tempo [s]")
-    plt.ylabel("P parcial [mmHg]")
+    plt.ylabel("O2 - P parcial capilares [mmHg]")
     plt.plot(object_both.t[-37500:], np.array(object_ra.y_tg["P_cap_O2"])[-37500:], color="r", label="RbA", marker = 'o')
     plt.plot(object_both.t[-37500:], np.array(object_dif.y_tg["P_cap_O2"])[-37500:], color="b", label="difusao", marker = '+')
     plt.plot(object_both.t[-37500:], np.array(object_both.y_tg["P_cap_O2"])[-37500:], color="g", label="ambos")
@@ -90,13 +90,90 @@ def _plot(object_ra, object_dif, object_both, object_normal):
     plt.figure(5)
     # plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Capilar")
     plt.xlabel("Tempo [s]")
-    plt.ylabel("nº de Mols [mmol]")
+    plt.ylabel("O2 - nº de Mols capilares [mmol]")
     plt.plot(object_both.t[-37500:], np.array(object_ra.x_tg["n_cap_O2"])[-37500:], color="r", label="RbA", marker = 'o')
     plt.plot(object_both.t[-37500:], np.array(object_dif.x_tg["n_cap_O2"])[-37500:], color="b", label="difusao", marker = '+')
     plt.plot(object_both.t[-37500:], np.array(object_both.x_tg["n_cap_O2"])[-37500:], color="g", label="ambos")
     plt.plot(object_both.t[-37500:], np.array(object_normal.x_tg["n_cap_O2"])[-37500:], color="y", label="normal")
     plt.legend(loc="upper left")
     plt.savefig("temp/dpoc/n_cap_O2")
+    
+    plt.figure(6)
+    # plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Capilar")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("CO2 - nº de Mols capilares [mmol]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.x_tg["n_cap_CO2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.x_tg["n_cap_CO2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.x_tg["n_cap_CO2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.x_tg["n_cap_CO2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/n_cap_CO2")
+    
+    plt.figure(7)
+    # plt.title("Pressão parcial de oxigenio nos capilares")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("CO2 - P parcial capilares [mmHg]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.y_tg["P_cap_CO2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.y_tg["P_cap_CO2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.y_tg["P_cap_CO2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.y_tg["P_cap_CO2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/PaCO2")
+    
+    plt.figure(8)
+    # plt.title("Pressão parcial de oxigenio nos capilares")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("O2 - P parcial alveolos [mmHg]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.y_tg["P_A_O2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.y_tg["P_A_O2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.y_tg["P_A_O2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.y_tg["P_A_O2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/PAlvO2")
+    
+    
+    plt.figure(9)
+    # plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Capilar")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("O2 - nº de Mols alveolos [mmol]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.x_tg["n_A_O2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.x_tg["n_A_O2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.x_tg["n_A_O2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.x_tg["n_A_O2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/n_A_O2")
+    
+    plt.figure(10)
+    # plt.title("Troca de Gases - nº de Mols dos Gases no Compartimento Capilar")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("CO2 - nº de Mols alveolos [mmol]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.x_tg["n_A_CO2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.x_tg["n_A_CO2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.x_tg["n_A_CO2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.x_tg["n_A_CO2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/n_A_CO2")
+    
+    plt.figure(11)
+    # plt.title("Pressão parcial de oxigenio nos capilares")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("CO2 - P parcial alveolos [mmHg]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.y_tg["P_A_CO2"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.y_tg["P_A_CO2"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.y_tg["P_A_CO2"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.y_tg["P_A_CO2"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
+    plt.savefig("temp/dpoc/PAlvCO2")
+    
+    plt.figure(12)
+    # plt.title("Controle - Variação da Frequência Respiratória (RR)")
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("RR [inc/min]")
+    plt.plot(object_both.t[-37500:], np.array(object_ra.y_int["RR"])[-37500:], color="r", label="RbA", marker = 'o')
+    plt.plot(object_both.t[-37500:], np.array(object_dif.y_int["RR"])[-37500:], color="b", label="difusao", marker = '+')
+    plt.plot(object_both.t[-37500:], np.array(object_both.y_int["RR"])[-37500:], color="g", label="ambos")
+    plt.plot(object_both.t[-37500:], np.array(object_normal.y_int["RR"])[-37500:], color="y", label="normal")
+    plt.legend(loc="upper left")
     
     plt.show()
     
@@ -259,19 +336,19 @@ def plot_int(t, x_tg, y_tg, u_tg, x_mp, y_mp, u_mp, y_int):
     #         f"{os.getenv('modo_atividade','repouso')}"
     #     )
 
-    # plt.figure(11)
+    plt.figure(11)
     # plt.title("Troca de Gases - Pressões Parciais dos Gases no Compartimento Capilar")
-    # plt.xlabel("Tempo [s]")
-    # plt.ylabel("P parcial [mmHg]")
-    # plt.plot(t, np.array(y_tg["P_cap_O2"]), color="r", label="P_cap_O2")
-    # plt.plot(t, np.array(y_tg["P_cap_CO2"]), color="b", label="P_cap_CO2")
-    # plt.legend(loc="upper left")
-    # if os.getenv("save_figures", default="") == 'TRUE':
-    #     plt.savefig(
-    #         f"temp/{result_folder}/figures/6_pparcial_capilar_"
-    #         f"{os.getenv('modo_ventilacao','normal')}_"
-    #         f"{os.getenv('modo_atividade','repouso')}"
-    #     )
+    plt.xlabel("Tempo [s]")
+    plt.ylabel("P parcial [mmHg]")
+    plt.plot(t, np.array(y_tg["P_cap_O2"]), color="r", label="P_cap_O2")
+    plt.plot(t, np.array(y_tg["P_cap_CO2"]), color="b", label="P_cap_CO2")
+    plt.legend(loc="upper left")
+    if os.getenv("save_figures", default="") == 'TRUE':
+        plt.savefig(
+            f"temp/{result_folder}/figures/6_pparcial_capilar_"
+            f"{os.getenv('modo_ventilacao','normal')}_"
+            f"{os.getenv('modo_atividade','repouso')}"
+        )
         
     #### ALVEOLO + CAPILARES
     plt.figure(10)

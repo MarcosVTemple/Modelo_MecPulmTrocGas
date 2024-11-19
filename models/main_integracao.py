@@ -5,7 +5,7 @@ import math as m
 import time as t
 import os
 
-from parametros import cts_mp, cts_tg, cts_int
+from parametros import cts_mp, cts_tg, cts_int, cts_comparacoes
 from functions.plot_integracao import plot_int
 from functions.controle_mec_pulm import controle_mp, get_params_controle_calc
 
@@ -49,8 +49,13 @@ class Integracao:
         self.modo_ventilacao = os.getenv("modo_ventilacao")
         self.modo_atividade = os.getenv("modo_atividade")
         
+        
         self.resistencia_alveolar = None
         self.fator_difusao = None
+        self.tipo_comparacao = None
+        
+        if kwargs.get("comparacoes", "") != "":
+            self.tipo_comparacao = kwargs.get("comparacoes", "")
         
         if kwargs.get("resistencia_alveolar", "") != "":
             self.resistencia_alveolar = kwargs.get("resistencia_alveolar", "")
@@ -152,15 +157,26 @@ class Integracao:
         self.x_mp.iloc[0, 4] = -5
         
         # tg
-        self.x_tg.iloc[0, 0] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_O2"]
-        self.x_tg.iloc[0, 1] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_CO2"]
-        self.x_tg.iloc[0, 2] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_N2"]
+        if self.tipo_comparacao:
+            self.x_tg.iloc[0, 0] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_O2"]
+            self.x_tg.iloc[0, 1] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_CO2"]
+            self.x_tg.iloc[0, 2] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_A_N2"]
 
-        self.x_tg.iloc[0, 3] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_O2"]
-        self.x_tg.iloc[0, 4] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_CO2"]
+            self.x_tg.iloc[0, 3] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_cap_O2"]
+            self.x_tg.iloc[0, 4] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_cap_CO2"]
 
-        self.x_tg.iloc[0, 5] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_O2"]
-        self.x_tg.iloc[0, 6] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_CO2"]
+            self.x_tg.iloc[0, 5] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_t_O2"]
+            self.x_tg.iloc[0, 6] = cts_comparacoes[self.tipo_comparacao]["nmols_inicial_t_CO2"]
+        else:
+            self.x_tg.iloc[0, 0] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_O2"]
+            self.x_tg.iloc[0, 1] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_CO2"]
+            self.x_tg.iloc[0, 2] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_A_N2"]
+
+            self.x_tg.iloc[0, 3] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_O2"]
+            self.x_tg.iloc[0, 4] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_cap_CO2"]
+
+            self.x_tg.iloc[0, 5] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_O2"]
+            self.x_tg.iloc[0, 6] = cts_tg[self.modo_atividade][self.modo_ventilacao]["nmols_inicial_t_CO2"]
         
         
         
